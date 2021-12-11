@@ -1,6 +1,6 @@
 import { Action } from "redux";
 
-import { User, ApplicationError, AuthenticatedUser, GetOptions, UserAuthenticateOptions, UserValidation, SnackbarVariant } from "../../models";
+import { User, ApplicationError, AuthenticatedUser, GetOptions, UserAuthenticateOptions, UserValidation, SnackbarVariant, UnauthorizedError } from "../../models";
 import { userService, sessionService } from "../../services";
 import { AppThunkAction, AppState, AppThunkDispatch } from "../../models/reduxModels";
 import { snackbarActions } from "../snackbarStore";
@@ -35,7 +35,11 @@ export enum ActionTypes {
     deleteFailure = 'DELETE_USER_FAILURE',
 
     validateCredentials = 'VALIDATE_USER_CREDENTIALS',
-    validate = 'VALIDATE_USER'
+    validate = 'VALIDATE_USER',
+
+    followUserRequest = 'FOLLOW_USER_REQUEST',
+    followUserSuccess = 'FOLLOW_USER_SUCCESS',
+    followUserFailure = 'FOLLOW_USER_FAILURE',
 }
 //#endregion
 
@@ -143,12 +147,28 @@ export interface Validate extends Action<ActionTypes> {
     formErrors: UserValidation;
 }
 
+export interface FollowUserRequest extends Action<ActionTypes> {
+    type: ActionTypes.followUserRequest;
+    user: User;
+}
+
+export interface FollowUserSuccess extends Action<ActionTypes> {
+    type: ActionTypes.followUserSuccess;
+    user: User;
+}
+
+export interface FollowUserFailure extends Action<ActionTypes> {
+    type: ActionTypes.followUserFailure;
+    error: ApplicationError;
+}
+
 export type Signin = SigninRequest | SigninSuccess | SigninFailure;
 export type GetUsers = GetUsersRequest | GetUsersSuccess | GetUsersFailure;
 export type GetUser = GetRequest | GetSuccess | GetFailure
 export type SaveUser = SaveRequest | CreateSuccess | UpdateSuccess | SaveFailure;
 export type UpdateSelectedUser = UpdateUserDetails
 export type DeleteUser = DeleteRequest | DeleteSuccess | DeleteFailure;
+export type FollowUser = FollowUserRequest | FollowUserSuccess | FollowUserFailure;
 
 export type UserActions = Signin
     | Signout
@@ -159,7 +179,8 @@ export type UserActions = Signin
     | DeleteUser
     | UpdateSelectedUser
     | ValidateCredentials
-    | Validate;
+    | Validate
+    | FollowUser;
 //#endregion
 
 //#region Actions
@@ -325,6 +346,42 @@ function validateUser(user: User): Validate {
     return { type: ActionTypes.validate, formErrors: result };
 }
 
+function followUser(user: User): AppThunkAction<Promise<FollowUserSuccess | FollowUserFailure>> {
+    return async (dispatch: AppThunkDispatch, getState: () => AppState) => {
+        dispatch(request(user))
+
+        const state = getState();
+
+        try {
+            if (state.userState.authenticating === false) {
+                let currentUser = state.userState.currentUser;
+
+                if (!state.userState.authenticated) {
+                    throw new UnauthorizedError('Вам необходимо авторизоваться');
+                }
+
+                if(!user.id) {
+                    throw new ApplicationError('Пользователь не найден');
+                }
+
+                await userService.follow(currentUser?.id || 0, user.id || 0);
+                return dispatch(success(user));
+            }
+
+            throw new UnauthorizedError('Вам необходимо авторизоваться');
+        }
+        catch (error: any) {
+            if (error instanceof ApplicationError)
+                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+            return dispatch(failure(error));
+        }
+    };
+
+    function request(user: User): FollowUserRequest { return { type: ActionTypes.followUserRequest, user: user }; }
+    function success(user: User): FollowUserSuccess { return { type: ActionTypes.followUserSuccess, user: user }; }
+    function failure(error: ApplicationError): FollowUserFailure { return { type: ActionTypes.followUserFailure, error: error }; }
+}
+
 export default {
     signin,
     signout,
@@ -335,6 +392,7 @@ export default {
     getUser,
     deleteUsers,
     validateCredentials,
-    validateUser
+    validateUser,
+    followUser
 }
 //#endregion

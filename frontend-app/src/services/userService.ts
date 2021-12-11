@@ -65,6 +65,16 @@ class UserService {
             .then(handleResponse);
     }
 
+    public async follow(followerId: number, followedId: number): Promise<void> {
+        return fetch('api/user/follow', {
+            credentials: 'include',
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ followerId, followedId })
+        })
+            .then(handleResponse);
+    }
+
     private validateFirstname(firstname: string): string {
         const firstnameValid = Boolean(firstname);
         return firstnameValid ? '' : 'Имя пользователя обязательно';

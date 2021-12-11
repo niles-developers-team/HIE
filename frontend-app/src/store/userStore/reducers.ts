@@ -1,12 +1,14 @@
-import { UserState, ModelsState, AuthenticationState, DeleteState, ValidateUserState, ModelState } from "./state";
+import { UserState, ModelsState, AuthenticationState, DeleteState, ValidateUserState, ModelState, FollowState } from "./state";
 import { UserActions, ActionTypes } from "./actions";
 import { UserValidation } from "../../models";
+import { act } from "react-dom/test-utils";
 
 const initialState: UserState = {
     authenticating: false,
     modelsLoading: true,
     deleting: false,
     modelLoading: true,
+    following: false,
 
     formErrors: UserValidation.initial
 }
@@ -60,7 +62,7 @@ export function userReducer(prevState: UserState = initialState, action: UserAct
         case ActionTypes.saveRequest: return prevState;
         case ActionTypes.createSuccess: {
             if (prevState.modelsLoading === true || prevState.modelLoading === true) return prevState;
-            
+
             const updatedModel = { ...prevState.model, ...action.user };
             const updatedModels = prevState.models.concat(action.user);
 
@@ -88,7 +90,7 @@ export function userReducer(prevState: UserState = initialState, action: UserAct
             const user = { ...prevState.model, ...action.user };
             const formErrors = { ...prevState.formErrors, ...action.formErrors };
 
-            const state: ModelState = { modelLoading: false, model: user }; 
+            const state: ModelState = { modelLoading: false, model: user };
             const validationState: ValidateUserState = { formErrors: formErrors };
             return { ...prevState, ...state, ...validationState }
         }
@@ -124,6 +126,27 @@ export function userReducer(prevState: UserState = initialState, action: UserAct
         case ActionTypes.clearEditionState: {
             const state: ModelState = { modelLoading: true, model: undefined };
             return { ...prevState, ...state };
+        }
+
+        case ActionTypes.followUserRequest: {
+            const deleteState: FollowState = { following: true, user: action.user };
+            return { ...prevState, ...deleteState };
+        }
+        case ActionTypes.followUserSuccess: {
+            if (prevState.authenticating === true) {
+                return prevState;
+            }
+
+            const currentUser = prevState.currentUser;
+            currentUser?.follows.push(action.user);
+
+            const state: AuthenticationState = { authenticating: false, authenticated: true, currentUser: currentUser };
+            const followState: FollowState = { following: false, followed: true };
+            return { ...prevState, ...followState, ...state };
+        }
+        case ActionTypes.followUserFailure: {
+            const followState: FollowState = { following: false, followed: false };
+            return { ...prevState, ...followState };
         }
         default: return prevState;
     }
