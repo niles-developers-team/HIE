@@ -42,7 +42,7 @@ export interface GetPaymentsFailure extends Action<ActionTypes> {
 }
 export interface GetRequest extends Action<ActionTypes> {
     type: ActionTypes.getPaymentRequest;
-    id?: string;
+    id?: number;
 }
 export interface GetSuccess extends Action<ActionTypes> {
     type: ActionTypes.getPaymentSuccess;
@@ -70,7 +70,7 @@ export interface ClearEditionState extends Action<ActionTypes> {
 
 export interface DeleteRequest extends Action<ActionTypes> {
     type: ActionTypes.deleteRequest;
-    ids: string[];
+    ids: number[];
 }
 
 export interface DeleteSuccess extends Action<ActionTypes> {
@@ -149,7 +149,7 @@ function getPayments(options: GetOptions): AppThunkAction<Promise<GetPaymentsSuc
     }
 }
 
-function getPayment(id?: string): AppThunkAction<Promise<GetSuccess | GetFailure>> {
+function getPayment(id: number): AppThunkAction<Promise<GetSuccess | GetFailure>> {
     return async (dispatch) => {
         dispatch(request(id));
 
@@ -175,13 +175,13 @@ function getPayment(id?: string): AppThunkAction<Promise<GetSuccess | GetFailure
             return dispatch(failure(error));
         }
 
-        function request(id?: string): GetRequest { return { type: ActionTypes.getPaymentRequest, id: id }; }
+        function request(id?: number): GetRequest { return { type: ActionTypes.getPaymentRequest, id: id }; }
         function success(payment: Payment): GetSuccess { return { type: ActionTypes.getPaymentSuccess, payment: payment }; }
         function failure(error: ApplicationError): GetFailure { return { type: ActionTypes.getPaymentFailure, error: error }; }
     }
 }
 
-function deletePayments(ids: string[]): AppThunkAction<Promise<DeleteSuccess | DeleteFailure>> {
+function deletePayments(ids: number[]): AppThunkAction<Promise<DeleteSuccess | DeleteFailure>> {
     return async (dispatch) => {
         dispatch(request(ids));
 
@@ -196,7 +196,7 @@ function deletePayments(ids: string[]): AppThunkAction<Promise<DeleteSuccess | D
             return dispatch(failure(error));
         }
 
-        function request(ids: string[]): DeleteRequest { return { type: ActionTypes.deleteRequest, ids: ids }; }
+        function request(ids: number[]): DeleteRequest { return { type: ActionTypes.deleteRequest, ids: ids }; }
         function success(): DeleteSuccess { return { type: ActionTypes.deleteSuccess }; }
         function failure(error: ApplicationError): DeleteFailure { return { type: ActionTypes.deleteFailure, error: error }; }
     }
@@ -208,9 +208,10 @@ function validatePayment(payment: Payment): Validate {
 }
 
 export default {
-    savePayment: savePayment,
+    savePayment,
     clearEditionState,
     getPayments,
+    getPayment,
     deletePayments,
     validatePayment
 }

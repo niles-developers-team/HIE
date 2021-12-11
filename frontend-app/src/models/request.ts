@@ -1,4 +1,5 @@
-import { Client } from ".";
+import moment from "moment";
+import { Client, GetOptions, Validation } from ".";
 
 export interface ClientRequest
 {
@@ -8,11 +9,10 @@ export interface ClientRequest
     totalAmount: number;
     amount: number;
     
-    clientPriority: RequestPriorities;
-    systemPriority: RequestPriorities;
+    priority: RequestPriorities;
     status: RequestStatuses;
 
-    client: Client;
+    client?: Client;
 }
 
 export enum RequestPriorities
@@ -23,4 +23,26 @@ export enum RequestPriorities
 export enum RequestStatuses 
 {
     InProgress, Completed, Error
+}
+
+export namespace ClientRequest {
+    export const initial: ClientRequest = {
+        amount: 0,
+        deadlineDate: moment().format('yyyy-MM-dd'),
+        description: '',
+        priority: RequestPriorities.Medium,
+        status: RequestStatuses.InProgress,
+        totalAmount: 0
+    }
+}
+
+export interface ClientRequestGetOptions extends GetOptions {
+    clientId?: string;
+    status?: string;
+}
+export interface ClientRequestValidation extends Validation {
+    clientError?: string;
+}
+export namespace ClientRequestValidation {
+    export const initial: ClientRequestValidation = Validation.initial;
 }

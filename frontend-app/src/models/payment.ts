@@ -1,19 +1,18 @@
-import { Benefactor, GetOptions, Validation } from ".";
+import { Benefactor, Client, GetOptions, Validation } from ".";
 
-export interface Payment
-{
+export interface Payment {
     id?: number;
     comment: string;
     amount: number;
 
     status: PaymentStatuses
-    
+
     benefactor?: Benefactor;
+    client?: Client;
     request?: Request;
 }
 
-export enum PaymentStatuses
-{
+export enum PaymentStatuses {
     InProgress,
     Completed,
     Error
@@ -28,9 +27,11 @@ export namespace Payment {
 }
 
 export interface PaymentGetOptions extends GetOptions {
-    userId?: string;
+    benefactorId?: number;
+    requestId?: number;
 }
 export interface PaymentValidation extends Validation {
+    benefactorError?: string;
 }
 export namespace PaymentValidation {
     export const initial: PaymentValidation = Validation.initial;

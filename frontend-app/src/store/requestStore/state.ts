@@ -1,4 +1,4 @@
-import { Payment, PaymentValidation } from "../../models"
+import { ClientRequest, ClientRequestValidation } from "../../models"
 
 export type ModelsLoading = {
     modelsLoading: true;
@@ -6,7 +6,7 @@ export type ModelsLoading = {
 
 export type ModelsLoaded = {
     modelsLoading: false;
-    models: Payment[];
+    models: ClientRequest[];
 }
 
 export type ModelLoading = {
@@ -15,7 +15,7 @@ export type ModelLoading = {
 
 export type ModelLoaded = {
     modelLoading: boolean;
-    model?: Payment;
+    model?: ClientRequest;
 }
 
 export type ModelsDeleting = {
@@ -29,11 +29,11 @@ export type ModelsDeleted = {
     ids?: number[];
 }
 
-export type ValidatePaymentState = {
-    formErrors?: PaymentValidation;
+export type ValidateClientRequestState = {
+    formErrors?: ClientRequestValidation;
 }
 
 export type ModelsState = ModelsLoading | ModelsLoaded;
 export type ModelState = ModelLoading | ModelLoaded;
 export type DeleteState = ModelsDeleting | ModelsDeleted;
-export type PaymentState = ModelState & ModelsState & DeleteState & ValidatePaymentState;
+export type ClientRequestState = ModelState & ModelsState & DeleteState & ValidateClientRequestState;

@@ -4,10 +4,12 @@ import thunkMiddleware from 'redux-thunk';
 
 import { AppState } from "../models/reduxModels";
 
-import { userReducer } from './userStore/reducers'
-import { snackbarReducer } from "./snackbarStore/reducers";
+import { userReducer } from './userStore'
+import { snackbarReducer } from "./snackbarStore";
+import { paymentReducer } from "./paymentStore";
 
 const rootReducer = combineReducers({
+    paymentState: paymentReducer,
     userState: userReducer,
     snackbarState: snackbarReducer,
 });

@@ -1,8 +1,7 @@
-import { GetOptions, Payment, PaymentGetOptions, PaymentValidation } from "../models";
+import { Payment, PaymentGetOptions, PaymentValidation } from "../models";
 import { handleJsonResponse, handleResponse, ResponseHandler } from "../utilities";
 
 class PaymentService {
-
     public async get(options?: PaymentGetOptions): Promise<Payment[]> {
         let url = 'api/user';
         let conditionIndex: number = 0;
@@ -13,8 +12,10 @@ class PaymentService {
                 url += `${conditionIndex++ === 0 ? '?' : '&'}ids=${options.ids}`;
             if (options.search !== undefined)
                 url += `${conditionIndex++ === 0 ? '?' : '&'}search=${options.search}`;
-            if (options.userId !== undefined)
-                url += `${conditionIndex++ === 0 ? '?' : '&'}userId=${options.userId}`;
+            if (options.benefactorId !== undefined)
+                url += `${conditionIndex++ === 0 ? '?' : '&'}benefactorId=${options.benefactorId}`;
+            if (options.benefactorId !== undefined)
+                url += `${conditionIndex++ === 0 ? '?' : '&'}requestId=${options.requestId}`;
         }
 
         return fetch(url, {
@@ -34,7 +35,7 @@ class PaymentService {
             .then(handleJsonResponse as ResponseHandler<Payment>);
     }
 
-    public async delete(ids: string[]): Promise<void> {
+    public async delete(ids: number[]): Promise<void> {
         return fetch('api/user', {
             credentials: 'include',
             method: 'DELETE',

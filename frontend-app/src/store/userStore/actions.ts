@@ -278,20 +278,15 @@ function getUser(id?: number): AppThunkAction<Promise<GetSuccess | GetFailure>> 
         let users: User[] = [];
 
         try {
-            if (state.userState.modelsLoading === true) {
+            if (state.userState.modelsLoading === true)
                 users = await userService.get({ id });
-                if (!users) {
-                    dispatch(snackbarActions.showSnackbar('Не удалось найти пользователя', SnackbarVariant.warning));
-                }
-            } else {
+            else
                 users = state.userState.models;
-            }
 
             let user = users.find(o => o.id === id);
 
             if (!user) {
-                dispatch(snackbarActions.showSnackbar('Не удалось найти пользователя', SnackbarVariant.warning));
-                return dispatch(failure(new ApplicationError('Не удалось найти пользователя')));
+                throw new ApplicationError('Не удалось найти пользователя');
             }
 
             dispatch(validateUser(user));
@@ -353,22 +348,19 @@ function followUser(user: User): AppThunkAction<Promise<FollowUserSuccess | Foll
         const state = getState();
 
         try {
-            if (state.userState.authenticating === false) {
-                let currentUser = state.userState.currentUser;
+            if (state.userState.authenticating === true)
+                throw new UnauthorizedError('Вам необходимо авторизоваться');
 
-                if (!state.userState.authenticated) {
-                    throw new UnauthorizedError('Вам необходимо авторизоваться');
-                }
+            let currentUser = state.userState.currentUser;
 
-                if(!user.id) {
-                    throw new ApplicationError('Пользователь не найден');
-                }
+            if (!state.userState.authenticated)
+                throw new UnauthorizedError('Вам необходимо авторизоваться');
 
-                await userService.follow(currentUser?.id || 0, user.id || 0);
-                return dispatch(success(user));
-            }
+            if (!user.id)
+                throw new ApplicationError('Пользователь не найден');
 
-            throw new UnauthorizedError('Вам необходимо авторизоваться');
+            await userService.follow(currentUser?.id || 0, user.id || 0);
+            return dispatch(success(user));
         }
         catch (error: any) {
             if (error instanceof ApplicationError)

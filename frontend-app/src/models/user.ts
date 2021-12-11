@@ -1,4 +1,4 @@
-import { Benefactor, Client, Validation } from ".";
+import { Payment, Validation } from ".";
 
 export interface User {
     id?: number;
@@ -11,6 +11,23 @@ export interface User {
     benefactor?: Benefactor;
     followers: User[];
     follows: User[];
+}
+
+export interface Client extends User {
+    bill: string;
+    inn: string;
+    approved: boolean;
+
+    payments: Payment[];
+    requests: Request[];
+}
+
+export interface Benefactor extends User {
+    id?: number;
+    level: number;
+    alwaysCommisionToService: boolean;
+
+    payments: Payment[];
 }
 
 export interface AuthenticatedUser extends User {
