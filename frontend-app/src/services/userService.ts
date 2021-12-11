@@ -1,5 +1,5 @@
 import { handleJsonResponse, ResponseHandler, handleResponse } from "../utilities";
-import { AuthenticatedUser, User, UserAuthenticateOptions, GetOptions, UserValidation } from "../models";
+import { AuthenticatedUser, User, UserAuthenticateOptions, GetOptions, UserValidation, Client, Benefactor } from "../models";
 import { sessionService } from "./sessionService";
 
 class UserService {
@@ -34,6 +34,26 @@ class UserService {
             body: JSON.stringify(user)
         })
             .then(handleJsonResponse as ResponseHandler<AuthenticatedUser>);
+    }
+
+    public async updateClient(user: Client): Promise<Client> {
+        return fetch('api/user/client-details', {
+            credentials: 'include',
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+        })
+            .then(handleJsonResponse as ResponseHandler<Client>);
+    }
+
+    public async updateBenefactor(user: Benefactor): Promise<Benefactor> {
+        return fetch('api/user/benefactor-details', {
+            credentials: 'include',
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(user)
+        })
+            .then(handleJsonResponse as ResponseHandler<Benefactor>);
     }
 
     public async get(options?: GetOptions): Promise<User[]> {
@@ -90,14 +110,22 @@ class UserService {
         return usernameValid ? '' : 'Логин должен быть длиннее 5 символов';
     }
 
-    private validatePassword(password: string): string {
+    private validatePassword(password?: string): string {
         const passwordValid = password && password.length >= 5;
         return passwordValid ? '' : 'Пароль должен быть длиннее 5 символов';
     }
 
-    private validateEmail(email: string): string {
+    private validateEmail(email?: string): string {
+        if (!email)
+            return '';
+
         const emailValid = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
         return emailValid ? '' : 'Невалидный email адрес';
+    }
+
+    private validatePhone(phone: string): string {
+        const phoneValid = phone.match(/\+?([1-9]{1})\(?([0-9]{3})\)?([0-9]{3})-([0-9]{2})-([0-9]{2})/i);
+        return phoneValid ? '' : 'Невалидный номер телефона';
     }
 
     public validateCredentials(username: string, password: string): UserValidation {
@@ -106,7 +134,7 @@ class UserService {
         const isValid = !usernameError && !passwordError;
 
         const userErrors: UserValidation = {
-            usernameError: this.validateUsername(username),
+            loginError: this.validateUsername(username),
             passwordError: this.validatePassword(password),
             isValid: isValid
         };
@@ -116,21 +144,17 @@ class UserService {
     public validateUser(user: User) {
         if (!user) return UserValidation.initial;
 
-        const firstnameError = this.validateFirstname(user.firstname);
-        const lastnameError = this.validateLastname(user.lastname);
-        const usernameError = this.validateUsername(user.username);
+        const loginError = this.validateUsername(user.login);
         const passwordError = user.id ? '' : this.validatePassword(user.password);
         const emailError = this.validateEmail(user.email);
-        const isValid = !firstnameError
-            && !lastnameError
-            && !usernameError
+        const phoneError = this.validatePhone(user.contactPhone);
+        const isValid = !loginError
             && !passwordError
-            && !emailError;
+            && !emailError
+            && !phoneError;
 
         const userErrors: UserValidation = {
-            firstnameError: firstnameError,
-            lastnameError: lastnameError,
-            usernameError: usernameError,
+            loginError: loginError,
             passwordError: passwordError,
             emailError: emailError,
             isValid: isValid

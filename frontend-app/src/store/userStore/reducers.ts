@@ -1,7 +1,6 @@
 import { UserState, ModelsState, AuthenticationState, DeleteState, ValidateUserState, ModelState, FollowState } from "./state";
 import { UserActions, ActionTypes } from "./actions";
 import { UserValidation } from "../../models";
-import { act } from "react-dom/test-utils";
 
 const initialState: UserState = {
     authenticating: false,
@@ -81,19 +80,30 @@ export function userReducer(prevState: UserState = initialState, action: UserAct
             return { ...prevState, ...modelsState, ...modelState };
         }
         case ActionTypes.saveFailure: return prevState;
+        
+        case ActionTypes.updateBenefactorRequest: return prevState;
+        case ActionTypes.updateBenefactorSuccess: {
+            if (prevState.authenticating === true || !prevState.currentUser) return prevState;
 
-        case ActionTypes.updateUserDetails: {
-            if (prevState.modelLoading === true) {
-                return prevState;
-            }
-
-            const user = { ...prevState.model, ...action.user };
-            const formErrors = { ...prevState.formErrors, ...action.formErrors };
+            const benefactor = action.benefactor;
+            const user = { ...prevState.currentUser, benefactor };
 
             const state: ModelState = { modelLoading: false, model: user };
-            const validationState: ValidateUserState = { formErrors: formErrors };
-            return { ...prevState, ...state, ...validationState }
+            return { ...prevState, ...state }
         }
+        case ActionTypes.updateBenefactorFailure: return prevState;
+
+        case ActionTypes.updateClientRequest: return prevState;
+        case ActionTypes.updateClientSuccess: {
+            if (prevState.authenticating === true || !prevState.currentUser) return prevState;
+
+            const client = action.client;
+            const user = { ...prevState.currentUser, client };
+
+            const state: ModelState = { modelLoading: false, model: user };
+            return { ...prevState, ...state }
+        }
+        case ActionTypes.updateClientRequest: return prevState;
 
         case ActionTypes.deleteRequest: {
             const deleteState: DeleteState = { deleting: true, ids: action.ids };
@@ -133,12 +143,10 @@ export function userReducer(prevState: UserState = initialState, action: UserAct
             return { ...prevState, ...deleteState };
         }
         case ActionTypes.followUserSuccess: {
-            if (prevState.authenticating === true) {
-                return prevState;
-            }
+            if (prevState.authenticating === true || !prevState.currentUser) return prevState;
 
             const currentUser = prevState.currentUser;
-            currentUser?.follows.push(action.user);
+            currentUser.followsCount++;
 
             const state: AuthenticationState = { authenticating: false, authenticated: true, currentUser: currentUser };
             const followState: FollowState = { following: false, followed: true };

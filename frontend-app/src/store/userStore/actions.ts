@@ -1,6 +1,6 @@
 import { Action } from "redux";
 
-import { User, ApplicationError, AuthenticatedUser, GetOptions, UserAuthenticateOptions, UserValidation, SnackbarVariant, UnauthorizedError } from "../../models";
+import { User, ApplicationError, AuthenticatedUser, GetOptions, UserAuthenticateOptions, UserValidation, SnackbarVariant, UnauthorizedError, Client, Benefactor } from "../../models";
 import { userService, sessionService } from "../../services";
 import { AppThunkAction, AppState, AppThunkDispatch } from "../../models/reduxModels";
 import { snackbarActions } from "../snackbarStore";
@@ -21,7 +21,13 @@ export enum ActionTypes {
     getUserSuccess = 'GET_USER_SUCCESS',
     getUserFailure = 'GET_USER_FAILURE',
 
-    updateUserDetails = 'UPDATE_USER_DETAILS',
+    updateClientRequest = 'UPDATE_CLIENT_REQUEST',
+    updateClientSuccess = 'UPDATE_CLIENT_SUCCESS',
+    updateClientFailure = 'UPDATE_CLIENT_FAILURE',
+
+    updateBenefactorRequest = 'UPDATE_BENEFACTOR_REQUEST',
+    updateBenefactorSuccess = 'UPDATE_BENEFACTOR_SUCCESS',
+    updateBenefactorFailure = 'UPDATE_BENEFACTOR_FAILURE',
 
     saveRequest = 'SAVE_USER_REQUEST',
     createSuccess = 'CREATE_USER_SUCCESS',
@@ -93,10 +99,34 @@ export interface GetFailure extends Action<ActionTypes> {
     error: ApplicationError;
 }
 
-export interface UpdateUserDetails extends Action<ActionTypes> {
-    type: ActionTypes.updateUserDetails;
-    user: User;
-    formErrors: UserValidation;
+export interface UpdateClientRequest extends Action<ActionTypes> {
+    type: ActionTypes.updateClientRequest;
+    client: Client;
+}
+
+export interface UpdateClientSuccess extends Action<ActionTypes> {
+    type: ActionTypes.updateClientSuccess;
+    client: Client;
+}
+
+export interface UpdateClientFailure extends Action<ActionTypes> {
+    type: ActionTypes.updateClientFailure;
+    error: ApplicationError;
+}
+
+export interface UpdateBenefactorRequest extends Action<ActionTypes> {
+    type: ActionTypes.updateBenefactorRequest;
+    benefactor: Benefactor;
+}
+
+export interface UpdateBenefactorSuccess extends Action<ActionTypes> {
+    type: ActionTypes.updateBenefactorSuccess;
+    benefactor: Benefactor;
+}
+
+export interface UpdateBenefactorFailure extends Action<ActionTypes> {
+    type: ActionTypes.updateBenefactorFailure;
+    error: ApplicationError;
 }
 
 export interface SaveRequest extends Action<ActionTypes> {
@@ -166,7 +196,8 @@ export type Signin = SigninRequest | SigninSuccess | SigninFailure;
 export type GetUsers = GetUsersRequest | GetUsersSuccess | GetUsersFailure;
 export type GetUser = GetRequest | GetSuccess | GetFailure
 export type SaveUser = SaveRequest | CreateSuccess | UpdateSuccess | SaveFailure;
-export type UpdateSelectedUser = UpdateUserDetails
+export type UpdateSelectedUser = UpdateBenefactorRequest | UpdateBenefactorSuccess | UpdateBenefactorFailure
+    | UpdateClientRequest | UpdateClientSuccess | UpdateClientFailure;
 export type DeleteUser = DeleteRequest | DeleteSuccess | DeleteFailure;
 export type FollowUser = FollowUserRequest | FollowUserSuccess | FollowUserFailure;
 
@@ -304,10 +335,52 @@ function getUser(id?: number): AppThunkAction<Promise<GetSuccess | GetFailure>> 
     }
 }
 
-function updateUserDetails(user: User): UpdateUserDetails {
-    const formErrors = userService.validateUser(user);
+function updateClientDetails(client: Client): AppThunkAction<Promise<UpdateClientSuccess | UpdateClientFailure>> {
+    return async (dispatch) => {
+        dispatch(request(client));
 
-    return { type: ActionTypes.updateUserDetails, user: user, formErrors: formErrors };
+        try {
+            if (!client.id)
+                throw new ApplicationError('Пользователь не найден');
+
+            const result = await userService.updateClient(client);
+            dispatch(snackbarActions.showSnackbar('Ваши данные успешно сохранены', SnackbarVariant.success));
+            return dispatch(updateSuccess(result));
+        }
+        catch (error: any) {
+            if (error instanceof ApplicationError)
+                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+            return dispatch(failure(error));
+        }
+
+        function request(client: Client): UpdateClientRequest { return { type: ActionTypes.updateClientRequest, client: client }; }
+        function updateSuccess(client: Client): UpdateClientSuccess { return { type: ActionTypes.updateClientSuccess, client: client }; }
+        function failure(error: ApplicationError): UpdateClientFailure { return { type: ActionTypes.updateClientFailure, error: error }; }
+    }
+}
+
+function updateBenefactorDetails(benefactor: Benefactor): AppThunkAction<Promise<UpdateBenefactorSuccess | UpdateBenefactorFailure>> {
+    return async (dispatch) => {
+        dispatch(request(benefactor));
+
+        try {
+            if (!benefactor.id)
+                throw new ApplicationError('Пользователь не найден');
+
+            const result = await userService.updateBenefactor(benefactor);
+            dispatch(snackbarActions.showSnackbar('Ваши данные успешно сохранены', SnackbarVariant.success));
+            return dispatch(updateSuccess(result));
+        }
+        catch (error: any) {
+            if (error instanceof ApplicationError)
+                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+            return dispatch(failure(error));
+        }
+
+        function request(benefactor: Benefactor): UpdateBenefactorRequest { return { type: ActionTypes.updateBenefactorRequest, benefactor: benefactor }; }
+        function updateSuccess(benefactor: Benefactor): UpdateBenefactorSuccess { return { type: ActionTypes.updateBenefactorSuccess, benefactor: benefactor }; }
+        function failure(error: ApplicationError): UpdateBenefactorFailure { return { type: ActionTypes.updateBenefactorFailure, error: error }; }
+    }
 }
 
 function deleteUsers(ids: number[]): AppThunkAction<Promise<DeleteSuccess | DeleteFailure>> {
@@ -378,7 +451,8 @@ export default {
     signin,
     signout,
     saveUser,
-    updateUserDetails,
+    updateBenefactorDetails,
+    updateClientDetails,
     clearEditionState,
     getUsers,
     getUser,

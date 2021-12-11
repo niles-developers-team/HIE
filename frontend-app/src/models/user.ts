@@ -1,19 +1,20 @@
-import { Payment, Validation } from ".";
+import { AutoPayment, Payment, Validation } from ".";
 
 export interface User {
     id?: number;
     login: string;
     password?: string;
-    email: string;
+    email?: string;
     contactPhone: string;
-
     client?: Client;
     benefactor?: Benefactor;
-    followers: User[];
-    follows: User[];
+
+    followersCount: number;
+    followsCount: number;
 }
 
-export interface Client extends User {
+export interface Client {
+    id?: number;
     bill: string;
     inn: string;
     approved: boolean;
@@ -22,12 +23,13 @@ export interface Client extends User {
     requests: Request[];
 }
 
-export interface Benefactor extends User {
+export interface Benefactor {
     id?: number;
     level: number;
     alwaysCommisionToService: boolean;
 
     payments: Payment[];
+    autoPayments: AutoPayment[];
 }
 
 export interface AuthenticatedUser extends User {
@@ -38,20 +40,19 @@ export namespace User {
         email: '',
         contactPhone: '',
         login: '',
-        followers: [],
-        follows: []
+        followersCount: 0,
+        followsCount: 0
     }
 }
 
 export interface UserAuthenticateOptions {
     login: string;
     password: string;
-    rememberMe: boolean;
 }
 
 export interface UserValidation extends Validation {
     emailError?: string;
-    usernameError?: string;
+    loginError?: string;
     passwordError?: string;
     firstnameError?: string;
     lastnameError?: string;
