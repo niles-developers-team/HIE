@@ -1,39 +1,39 @@
-import { DeleteState, ModelsState, ModelState, PaymentState, ValidatePaymentState } from ".";
-import { PaymentValidation } from "../../models";
-import { PaymentActions, ActionTypes } from "./actions";
+import { DeleteState, ModelsState, ModelState, MessageState, ValidateMessageState } from ".";
+import { MessageValidation } from "../../models";
+import { MessageActions, ActionTypes } from "./actions";
 
-const initialState: PaymentState = {
+const initialState: MessageState = {
     modelsLoading: true,
     deleting: false,
     modelLoading: true,
 
-    formErrors: PaymentValidation.initial
+    formErrors: MessageValidation.initial
 }
 
-export function paymentReducer(prevState: PaymentState = initialState, action: PaymentActions): PaymentState {
+export function messageReducer(prevState: MessageState = initialState, action: MessageActions): MessageState {
     switch (action.type) {
-        case ActionTypes.getPaymentsRequest: {
+        case ActionTypes.getMessagesRequest: {
             const state: ModelsState = { modelsLoading: true };
             return { ...prevState, ...state };
         }
-        case ActionTypes.getPaymentsSuccess: {
-            const state: ModelsState = { modelsLoading: false, models: action.payments };
+        case ActionTypes.getMessagesSuccess: {
+            const state: ModelsState = { modelsLoading: false, models: action.messages };
             return { ...prevState, ...state };
         }
-        case ActionTypes.getPaymentsFailure: {
+        case ActionTypes.getMessagesFailure: {
             const state: ModelsState = { modelsLoading: false, models: [] };
             return { ...prevState, ...state };
         }
 
-        case ActionTypes.getPaymentRequest: {
+        case ActionTypes.getMessageRequest: {
             const state: ModelState = { modelLoading: true };
             return { ...prevState, ...state };
         }
-        case ActionTypes.getPaymentSuccess: {
-            const state: ModelState = { modelLoading: false, model: action.payment };
+        case ActionTypes.getMessageSuccess: {
+            const state: ModelState = { modelLoading: false, model: action.message };
             return { ...prevState, ...state };
         }
-        case ActionTypes.getPaymentFailure: {
+        case ActionTypes.getMessageFailure: {
             const state: ModelState = { modelLoading: false, model: undefined };
             return { ...prevState, ...state };
         }
@@ -42,8 +42,8 @@ export function paymentReducer(prevState: PaymentState = initialState, action: P
         case ActionTypes.createSuccess: {
             if (prevState.modelsLoading === true || prevState.modelLoading === true) return prevState;
             
-            const updatedModel = { ...prevState.model, ...action.payment };
-            const updatedModels = prevState.models.concat(action.payment);
+            const updatedModel = { ...prevState.model, ...action.message };
+            const updatedModels = prevState.models.concat(action.message);
 
             const modelsState: ModelsState = { modelsLoading: false, models: updatedModels };
             const modelState: ModelState = { modelLoading: false, model: updatedModel };
@@ -70,7 +70,7 @@ export function paymentReducer(prevState: PaymentState = initialState, action: P
         }
 
         case ActionTypes.validate: {
-            const state: ValidatePaymentState = { formErrors: action.formErrors };
+            const state: ValidateMessageState = { formErrors: action.formErrors };
             return { ...prevState, ...state };
         }
 

@@ -7,8 +7,12 @@ import { AppState } from "../models/reduxModels";
 import { userReducer } from './userStore'
 import { snackbarReducer } from "./snackbarStore";
 import { paymentReducer } from "./paymentStore";
+import { commentReducer } from "./commentStore";
+import { messageReducer } from "./messageStore";
 
 const rootReducer = combineReducers({
+    commentState: commentReducer,
+    messageStat: messageReducer,
     paymentState: paymentReducer,
     userState: userReducer,
     snackbarState: snackbarReducer,
