@@ -1,4 +1,4 @@
-import { DeleteState, ModelsState, ModelState, MessageState, ValidateMessageState } from ".";
+import { DeleteState, ModelsState, ModelState, MessageState, ValidateMessageState, ChatsState } from ".";
 import { MessageValidation } from "../../models";
 import { MessageActions, ActionTypes } from "./actions";
 
@@ -6,12 +6,26 @@ const initialState: MessageState = {
     modelsLoading: true,
     deleting: false,
     modelLoading: true,
+    chatsLoading: true,
 
     formErrors: MessageValidation.initial
 }
 
 export function messageReducer(prevState: MessageState = initialState, action: MessageActions): MessageState {
     switch (action.type) {
+        case ActionTypes.getChatsRequest: {
+            const state: ChatsState = { chatsLoading: true };
+            return { ...prevState, ...state };
+        }
+        case ActionTypes.getChatsSuccess: {
+            const state: ChatsState = { chatsLoading: false, chats: action.chats };
+            return { ...prevState, ...state };
+        }
+        case ActionTypes.getChatsFailure: {
+            const state: ChatsState = { chatsLoading: false, chats: [] };
+            return { ...prevState, ...state };
+        }
+
         case ActionTypes.getMessagesRequest: {
             const state: ModelsState = { modelsLoading: true };
             return { ...prevState, ...state };
@@ -41,7 +55,7 @@ export function messageReducer(prevState: MessageState = initialState, action: M
         case ActionTypes.saveRequest: return prevState;
         case ActionTypes.createSuccess: {
             if (prevState.modelsLoading === true || prevState.modelLoading === true) return prevState;
-            
+
             const updatedModel = { ...prevState.model, ...action.message };
             const updatedModels = prevState.models.concat(action.message);
 

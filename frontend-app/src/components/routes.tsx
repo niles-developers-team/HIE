@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
 import { Home, Messenger, SearchComponent, Me, Signin, NotFound, Signup, Layout } from ".";
 import { AppState } from "../models";
+import { ChatComponent } from "./messenger/Chat";
 
 export function RoutesSwitch() {
     const { userState } = useSelector((state: AppState) => ({ userState: state.userState }));
@@ -34,6 +35,7 @@ export function RoutesSwitch() {
                 <>
                     <Route index element={<Layout><Home /></Layout>} />
                     <Route path="messenger" element={<Layout><Messenger /></Layout>} />
+                    <Route path="messenger/:recepientId/:requestId" element={<Layout><ChatComponent /></Layout>} />
                     <Route path="search" element={<Layout><SearchComponent /></Layout>} />
                     <Route path="me" element={<Layout><Me /></Layout>} />
                 </>

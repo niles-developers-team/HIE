@@ -1,7 +1,16 @@
-import { Message, MessageGetOptions, MessageValidation } from "../models";
+import { Chat, Message, MessageGetOptions, MessageValidation } from "../models";
 import { handleJsonResponse, handleResponse, ResponseHandler } from "../utilities";
 
 class MessageService {
+    public async getChats(userId: number): Promise<Chat[]> {
+        let url = `api/chats?userId=${userId}`;
+        return fetch(url, {
+            credentials: 'include',
+            method: 'GET',
+        })
+            .then(handleJsonResponse as ResponseHandler<Chat[]>);
+    }
+
     public async get(options?: MessageGetOptions): Promise<Message[]> {
         let url = 'api/user';
         let conditionIndex: number = 0;
@@ -12,10 +21,10 @@ class MessageService {
                 url += `${conditionIndex++ === 0 ? '?' : '&'}ids=${options.ids}`;
             if (options.search !== undefined)
                 url += `${conditionIndex++ === 0 ? '?' : '&'}search=${options.search}`;
-            if (options.clientId !== undefined)
-                url += `${conditionIndex++ === 0 ? '?' : '&'}clientId=${options.clientId}`;
-            if (options.benefactorId !== undefined)
-                url += `${conditionIndex++ === 0 ? '?' : '&'}benefactorId=${options.benefactorId}`;
+            if (options.senderId !== undefined)
+                url += `${conditionIndex++ === 0 ? '?' : '&'}senderId=${options.senderId}`;
+            if (options.recepientId !== undefined)
+                url += `${conditionIndex++ === 0 ? '?' : '&'}recepientId=${options.recepientId}`;
             if (options.requestId !== undefined)
                 url += `${conditionIndex++ === 0 ? '?' : '&'}requestId=${options.requestId}`;
         }

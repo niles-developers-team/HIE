@@ -9,6 +9,7 @@ export const menuStyles = (theme: Theme) => ({
         backgroundColor: theme.palette.primary.light
     },
     menu: {
-        borderRight: `1px solid ${theme.palette.grey[300]}`
+        borderRight: `1px solid ${theme.palette.grey[300]}`,
+        backgroundColor: theme.palette.background.paper
     }
 });

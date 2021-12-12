@@ -1,19 +1,27 @@
 import moment from "moment";
-import { Benefactor, Client, ClientRequest, GetOptions, Validation } from ".";
+import { Benefactor, Client, ClientRequest, GetOptions, User, Validation } from ".";
+
+export interface Chat {
+    recepientId: number;
+    requestId?: number;
+    recepientLogin: string;
+    lastMessage: Message;
+}
 
 export interface Message {
     id?: number;
     text: string;
     createdDate: string;
 
-    client?: Client;
-    benefactor?: Benefactor;
-    request?: ClientRequest;
+    senderId?: number;
+    recepient?: User;
+    recepientId?: number;
+    requestId?: number;
 }
 
 export interface MessageGetOptions extends GetOptions {
-    clientId?: number;
-    benefactorId?: number;
+    senderId?: number;
+    recepientId?: number;
     requestId?: number;
 }
 

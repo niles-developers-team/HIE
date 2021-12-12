@@ -257,8 +257,6 @@ export const Home = withStyles(styles)(function (props: Props) {
             feed={feed} />);
     });
 
-    const drawerWidth = 360;
-
     return (
         <Container maxWidth="sm">
             <Grid className={classes.py4} container direction="column" component="main" alignItems="center" justifyContent="start">

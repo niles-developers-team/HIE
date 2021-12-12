@@ -1,11 +1,15 @@
 import { Action } from "redux";
-import { ApplicationError, AppState, AppThunkDispatch, GetOptions, Message, MessageValidation, SnackbarVariant } from "../../models";
+import { ApplicationError, AppState, AppThunkDispatch, Chat, GetOptions, Message, MessageGetOptions, MessageValidation, SnackbarVariant } from "../../models";
 import { AppThunkAction } from "../../models/reduxModels";
 import { snackbarActions } from "../snackbarStore";
 import { messageService } from "../../services";
 
 //#region Actions types enum
 export enum ActionTypes {
+    getChatsRequest = 'GET_CHATS_REQUEST',
+    getChatsSuccess = 'GET_CHATS_SUCCESS',
+    getChatsFailure = 'GET_CHATS_FAILURE',
+
     getMessagesRequest = 'GET_MESSAGES_REQUEST',
     getMessagesSuccess = 'GET_MESSAGES_SUCCESS',
     getMessagesFailure = 'GET_MESSAGES_FAILURE',
@@ -38,6 +42,18 @@ export interface GetMessagesSuccess extends Action<ActionTypes> {
 }
 export interface GetMessagesFailure extends Action<ActionTypes> {
     type: ActionTypes.getMessagesFailure;
+    error: ApplicationError;
+}
+export interface GetChatsRequest extends Action<ActionTypes> {
+    type: ActionTypes.getChatsRequest;
+    userId: number;
+}
+export interface GetChatsSuccess extends Action<ActionTypes> {
+    type: ActionTypes.getChatsSuccess;
+    chats: Chat[];
+}
+export interface GetChatsFailure extends Action<ActionTypes> {
+    type: ActionTypes.getChatsFailure;
     error: ApplicationError;
 }
 export interface GetRequest extends Action<ActionTypes> {
@@ -87,12 +103,14 @@ export interface Validate extends Action<ActionTypes> {
     formErrors: MessageValidation;
 }
 
+export type GetChats = GetChatsRequest | GetChatsSuccess | GetChatsFailure;
 export type GetMessages = GetMessagesRequest | GetMessagesSuccess | GetMessagesFailure;
 export type GetMessage = GetRequest | GetSuccess | GetFailure;
 export type SaveMessage = SaveRequest | CreateSuccess | SaveFailure;
 export type DeleteMessage = DeleteRequest | DeleteSuccess | DeleteFailure;
 
-export type MessageActions = GetMessages
+export type MessageActions = GetChats
+    | GetMessages
     | GetMessage
     | ClearEditionState
     | SaveMessage
@@ -130,8 +148,33 @@ function saveMessage(model: Message): AppThunkAction<Promise<CreateSuccess | Sav
     }
 }
 
+function getChats(userId: number): AppThunkAction<Promise<GetChatsSuccess | GetChatsFailure>> {
+    return async (dispatch: AppThunkDispatch, getState: () => AppState) => {
+        dispatch(request(userId));
 
-function getMessages(options: GetOptions): AppThunkAction<Promise<GetMessagesSuccess | GetMessagesFailure>> {
+        const { messageState } = getState();
+
+        try {
+            if (messageState.chatsLoading === true) {
+                const result = await messageService.getChats(userId);
+                return dispatch(success(result));
+            } else {
+                return dispatch(success(messageState.chats));
+            }
+        }
+        catch (error: any) {
+
+            dispatch(snackbarActions.showSnackbar(error.chat, SnackbarVariant.error));
+            return dispatch(failure(error));
+        }
+
+        function request(userId: number): GetChatsRequest { return { type: ActionTypes.getChatsRequest, userId: userId }; }
+        function success(chats: Chat[]): GetChatsSuccess { return { type: ActionTypes.getChatsSuccess, chats: chats }; }
+        function failure(error: ApplicationError): GetChatsFailure { return { type: ActionTypes.getChatsFailure, error: error }; }
+    }
+}
+
+function getMessages(options: MessageGetOptions): AppThunkAction<Promise<GetMessagesSuccess | GetMessagesFailure>> {
     return async dispatch => {
         dispatch(request(options));
 
@@ -145,7 +188,7 @@ function getMessages(options: GetOptions): AppThunkAction<Promise<GetMessagesSuc
             return dispatch(failure(error));
         }
 
-        function request(options: GetOptions): GetMessagesRequest { return { type: ActionTypes.getMessagesRequest, options: options }; }
+        function request(options: MessageGetOptions): GetMessagesRequest { return { type: ActionTypes.getMessagesRequest, options: options }; }
         function success(messages: Message[]): GetMessagesSuccess { return { type: ActionTypes.getMessagesSuccess, messages: messages }; }
         function failure(error: ApplicationError): GetMessagesFailure { return { type: ActionTypes.getMessagesFailure, error: error }; }
     }
@@ -210,6 +253,7 @@ function validateMessage(message: Message): Validate {
 }
 
 const actions = {
+    getChats,
     saveMessage,
     clearEditionState,
     getMessages,
