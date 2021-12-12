@@ -71,7 +71,7 @@ export interface Signout extends Action<ActionTypes> {
 
 export interface GetUsersRequest extends Action<ActionTypes> {
     type: ActionTypes.getUsersRequest;
-    options: GetOptions;
+    options?: GetOptions;
 }
 
 export interface GetUsersSuccess extends Action<ActionTypes> {
@@ -276,7 +276,7 @@ function clearEditionState(): ClearEditionState {
     return { type: ActionTypes.clearEditionState };
 }
 
-function getUsers(options: GetOptions): AppThunkAction<Promise<GetUsersSuccess | GetUsersFailure>> {
+function getUsers(options?: GetOptions): AppThunkAction<Promise<GetUsersSuccess | GetUsersFailure>> {
     return async dispatch => {
         dispatch(request(options));
 
@@ -290,7 +290,7 @@ function getUsers(options: GetOptions): AppThunkAction<Promise<GetUsersSuccess |
             return dispatch(failure(error));
         }
 
-        function request(options: GetOptions): GetUsersRequest { return { type: ActionTypes.getUsersRequest, options: options }; }
+        function request(options?: GetOptions): GetUsersRequest { return { type: ActionTypes.getUsersRequest, options: options }; }
         function success(users: User[]): GetUsersSuccess { return { type: ActionTypes.getUsersSuccess, users: users }; }
         function failure(error: ApplicationError): GetUsersFailure { return { type: ActionTypes.getUsersFailure, error: error }; }
     }

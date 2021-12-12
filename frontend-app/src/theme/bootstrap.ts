@@ -71,5 +71,13 @@ export const bootstrap = () => ({
     overflowWrapper: {
         maxHeight: '100%',
         overflow: 'auto'
+    },
+
+    borderlessInput: {
+        '&:focus-visible': {
+            outline: 'none'
+        },
+        border: 'none !important',
+        width: '480px'
     }
 });

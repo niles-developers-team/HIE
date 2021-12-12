@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Route, Routes, useLocation, useNavigate } from "react-router";
-import { Home, Messenger, Search, Me, Signin, NotFound, Signup, Layout } from ".";
+import { Home, Messenger, SearchComponent, Me, Signin, NotFound, Signup, Layout } from ".";
 import { AppState } from "../models";
 
 export function RoutesSwitch() {
@@ -34,7 +34,7 @@ export function RoutesSwitch() {
                 <>
                     <Route index element={<Layout><Home /></Layout>} />
                     <Route path="messenger" element={<Layout><Messenger /></Layout>} />
-                    <Route path="search" element={<Layout><Search /></Layout>} />
+                    <Route path="search" element={<Layout><SearchComponent /></Layout>} />
                     <Route path="me" element={<Layout><Me /></Layout>} />
                 </>
             ) : (
