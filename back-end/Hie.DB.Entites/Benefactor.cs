@@ -1,6 +1,4 @@
 ﻿using Hie.DB.Common;
-using System;
-using System.Collections.Generic;
 
 namespace Hie.DB.Entities {
   public class Benefactor: IEntity {
@@ -12,11 +10,5 @@ namespace Hie.DB.Entities {
 
     public long LevelId { get; set; }
     public BenefactorLevel Level { get; set; }
-
-    public ICollection<ChatMessage> ChatMessages { get; set; }
-
-    public Benefactor() {
-      ChatMessages = new List<ChatMessage>();
-    }
   }
 }

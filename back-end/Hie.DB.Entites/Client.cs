@@ -14,11 +14,9 @@ namespace Hie.DB.Entities {
 
     public User User { get; set; }
 
-    public ICollection<ChatMessage> ChatMessages { get; set; }
     public ICollection<Request> Requests { get; set; }
 
     public Client() {
-      ChatMessages = new List<ChatMessage>();
       Requests = new List<Request>();
     }
   }

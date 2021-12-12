@@ -44,8 +44,8 @@ namespace Hie.DB {
       modelBuilder.Entity<AutoPaymentBenefactor>().HasOne(x => x.Client).WithOne().HasForeignKey<AutoPaymentBenefactor>(x => x.ClientId).IsRequired(false);
 
       modelBuilder.Entity<ChatMessage>().HasOne(x => x.Request).WithOne().HasForeignKey<ChatMessage>(x => x.RequestId);
-      modelBuilder.Entity<ChatMessage>().HasOne(x => x.Benefactor).WithMany(x => x.ChatMessages).HasForeignKey(x => x.BenefactorId);
-      modelBuilder.Entity<ChatMessage>().HasOne(x => x.Client).WithMany(x => x.ChatMessages).HasForeignKey(x => x.ClientId);
+      modelBuilder.Entity<ChatMessage>().HasOne(x => x.Recepient).WithMany().HasForeignKey(x => x.RecepientId);
+      modelBuilder.Entity<ChatMessage>().HasOne(x => x.Sender).WithMany().HasForeignKey(x => x.SenderId);
 
       base.OnModelCreating(modelBuilder);
     }

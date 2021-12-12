@@ -7,13 +7,13 @@ namespace Hie.DB.Entities {
     public DateTime CreateDateUtc { get; set; }
     public string Text { get; set; }
 
-    public long BenefactorId { get; set; }
-    public Benefactor Benefactor { get; set; }
+    public long SenderId { get; set; }
+    public User Sender { get; set; }
 
-    public long RequestId { get; set; }
+    public long RecepientId { get; set; }
+    public User Recepient { get; set; }
+
+    public long? RequestId { get; set; }
     public Request Request { get; set; }
-
-    public long ClientId { get; set; }
-    public Client Client { get; set; }
   }
 }
