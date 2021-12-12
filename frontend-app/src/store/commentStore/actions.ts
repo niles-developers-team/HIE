@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { ApplicationError, GetOptions, Comment, CommentValidation, SnackbarVariant } from "../../models";
+import { ApplicationError, GetOptions, Comment, CommentValidation, SnackbarVariant, CommentGetOptions, AppState, AppThunkDispatch } from "../../models";
 import { AppThunkAction } from "../../models/reduxModels";
 import { snackbarActions } from "../snackbarStore";
 import { commentService } from "../../services";
@@ -108,16 +108,20 @@ function clearEditionState(): ClearEditionState {
 }
 
 function saveComment(model: Comment): AppThunkAction<Promise<CreateSuccess | SaveFailure>> {
-    return async (dispatch) => {
+    return async (dispatch: AppThunkDispatch, getState: () => AppState) => {
         dispatch(request(model));
 
         try {
+            const {commentsState} = getState();
             const result = await commentService.create(model);
+            if (commentsState.modelsLoading === false)
+                commentsState.models.push(result);
+
             return dispatch(createSuccess(result));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 
@@ -128,21 +132,30 @@ function saveComment(model: Comment): AppThunkAction<Promise<CreateSuccess | Sav
 }
 
 
-function getComments(options: GetOptions): AppThunkAction<Promise<GetCommentsSuccess | GetCommentsFailure>> {
-    return async dispatch => {
+function getComments(options: CommentGetOptions): AppThunkAction<Promise<GetCommentsSuccess | GetCommentsFailure>> {
+    return async (dispatch: AppThunkDispatch, getState: () => AppState) => {
         dispatch(request(options));
+        const { commentsState } = getState();
+        let result: Comment[] = [];
+        if (commentsState.modelsLoading === false) {
+            result = commentsState.models.filter(o => o.request?.id === options.requestId);
+        }
 
         try {
-            const result = await commentService.get(options);
-            return dispatch(success(result));
+            if(!result.length) {
+                result = await commentService.get(options);
+                return dispatch(success(result));
+            } else {
+                return dispatch(success(result));
+            }
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 
-        function request(options: GetOptions): GetCommentsRequest { return { type: ActionTypes.getCommentsRequest, options: options }; }
+        function request(options: CommentGetOptions): GetCommentsRequest { return { type: ActionTypes.getCommentsRequest, options: options }; }
         function success(comments: Comment[]): GetCommentsSuccess { return { type: ActionTypes.getCommentsSuccess, comments: comments }; }
         function failure(error: ApplicationError): GetCommentsFailure { return { type: ActionTypes.getCommentsFailure, error: error }; }
     }
@@ -169,8 +182,8 @@ function getComment(id: number): AppThunkAction<Promise<GetSuccess | GetFailure>
             return dispatch(success(comment));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 
@@ -190,8 +203,8 @@ function deleteComments(ids: number[]): AppThunkAction<Promise<DeleteSuccess | D
             return dispatch(success());
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 

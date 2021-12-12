@@ -1,12 +1,13 @@
 import { UserState, ModelsState, AuthenticationState, DeleteState, ValidateUserState, ModelState, FollowState } from "./state";
 import { UserActions, ActionTypes } from "./actions";
-import { UserValidation } from "../../models";
+import { SnackbarVariant, UserValidation } from "../../models";
+import { SnackbarState } from "../snackbarStore";
 
 const initialState: UserState = {
     authenticating: false,
     modelsLoading: true,
     deleting: false,
-    modelLoading: true,
+    modelLoading: false,
     following: false,
 
     formErrors: UserValidation.initial
@@ -58,7 +59,9 @@ export function userReducer(prevState: UserState = initialState, action: UserAct
             return { ...prevState, ...state };
         }
 
-        case ActionTypes.saveRequest: return prevState;
+        case ActionTypes.saveRequest: {
+            return { ...prevState, modelLoading: true };
+        }
         case ActionTypes.createSuccess: {
             if (prevState.modelsLoading === true || prevState.modelLoading === true) return prevState;
 
@@ -79,7 +82,9 @@ export function userReducer(prevState: UserState = initialState, action: UserAct
             const modelState: ModelState = { modelLoading: false, model: updatedModel };
             return { ...prevState, ...modelsState, ...modelState };
         }
-        case ActionTypes.saveFailure: return prevState;
+        case ActionTypes.saveFailure: {
+            return { ...prevState, modelLoading: false };
+        }
         
         case ActionTypes.updateBenefactorRequest: return prevState;
         case ActionTypes.updateBenefactorSuccess: {

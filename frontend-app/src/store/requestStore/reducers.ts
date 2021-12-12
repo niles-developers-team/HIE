@@ -1,5 +1,6 @@
 import { DeleteState, ModelsState, ModelState, ClientRequestState, ValidateClientRequestState } from ".";
-import { ClientRequestValidation } from "../../models";
+import { ClientRequestValidation, SnackbarVariant } from "../../models";
+import { SnackbarState } from "../snackbarStore";
 import { ClientRequestActions, ActionTypes } from "./actions";
 
 const initialState: ClientRequestState = {
@@ -10,7 +11,7 @@ const initialState: ClientRequestState = {
     formErrors: ClientRequestValidation.initial
 }
 
-export function clientrequestReducer(prevState: ClientRequestState = initialState, action: ClientRequestActions): ClientRequestState {
+export function clientRequestReducer(prevState: ClientRequestState = initialState, action: ClientRequestActions): ClientRequestState {
     switch (action.type) {
         case ActionTypes.getRequestsRequest: {
             const state: ModelsState = { modelsLoading: true };
@@ -41,7 +42,7 @@ export function clientrequestReducer(prevState: ClientRequestState = initialStat
         case ActionTypes.saveRequest: return prevState;
         case ActionTypes.createSuccess: {
             if (prevState.modelsLoading === true || prevState.modelLoading === true) return prevState;
-            
+
             const updatedModel = { ...prevState.model, ...action.request };
             const updatedModels = prevState.models.concat(action.request);
 

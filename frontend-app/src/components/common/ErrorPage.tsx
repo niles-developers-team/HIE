@@ -1,6 +1,5 @@
 import { Grid, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
-import { RouteProps } from "react-router-dom";
 
 interface Props {
     message: string;

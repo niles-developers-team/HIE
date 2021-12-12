@@ -3,7 +3,7 @@ import { handleJsonResponse, handleResponse, ResponseHandler } from "../utilitie
 
 class CommentService {
     public async get(options?: CommentGetOptions): Promise<Comment[]> {
-        let url = 'api/user';
+        let url = 'api/request/comment';
         let conditionIndex: number = 0;
         if (options) {
             if (options.id)
@@ -26,7 +26,7 @@ class CommentService {
     }
 
     public async create(model: Comment): Promise<Comment> {
-        return fetch('api/user', {
+        return fetch('api/request/comment', {
             credentials: 'include',
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -36,7 +36,7 @@ class CommentService {
     }
 
     public async delete(ids: number[]): Promise<void> {
-        return fetch('api/user', {
+        return fetch('api/request/comment', {
             credentials: 'include',
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },

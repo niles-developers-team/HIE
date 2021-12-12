@@ -117,7 +117,7 @@ function savePayment(model: Payment): AppThunkAction<Promise<CreateSuccess | Sav
             return dispatch(createSuccess(result));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
+            
                 dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
@@ -138,7 +138,7 @@ function getPayments(options: GetOptions): AppThunkAction<Promise<GetPaymentsSuc
             return dispatch(success(result));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
+            
                 dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
@@ -170,7 +170,7 @@ function getPayment(id: number): AppThunkAction<Promise<GetSuccess | GetFailure>
             return dispatch(success(payment));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
+            
                 dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
@@ -191,7 +191,7 @@ function deletePayments(ids: number[]): AppThunkAction<Promise<DeleteSuccess | D
             return dispatch(success());
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
+            
                 dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }

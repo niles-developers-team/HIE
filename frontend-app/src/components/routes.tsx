@@ -1,74 +1,50 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Route, Routes, useNavigate } from "react-router";
-import { RouteProps } from "react-router-dom";
-import { Home, Messenger, Search, Me, Signin, NotFound, ErrorPage, Signup } from ".";
-import { ApplicationError, AppState, UnauthorizedError } from "../models";
+import { Route, Routes, useLocation, useNavigate } from "react-router";
+import { Home, Messenger, Search, Me, Signin, NotFound, Signup, Layout } from ".";
+import { AppState } from "../models";
 
 export function RoutesSwitch() {
     const { userState } = useSelector((state: AppState) => ({ userState: state.userState }));
     const [authenticated, setAuthenticated] = useState<boolean>(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
+        if (!userState.authenticating && !userState.authenticated)
+            if (location.pathname === '/sign-in' || location.pathname === '/sign-up') {
+
+                setAuthenticated(false);
+                return;
+            }
+
         if (userState.authenticating || (!userState.authenticating && !userState.authenticated)) {
             navigate('sign-in');
+
+            setAuthenticated(false);
             return;
         }
 
         setAuthenticated(true);
-    }, [userState]);
+    }, [userState.authenticating, location]);
 
     return (
-        <ErrorBoundary>
-            <Routes >
-                {authenticated ? (
-                    <>
-                        <Route index element={<Home />} />
-                        <Route path="messenger" element={<Messenger />} />
-                        <Route path="search" element={<Search />} />
-                        <Route path="me" element={<Me />} />
-                    </>
-                ) : (
-                    <>
-                        <Route path='sign-in' element={<Signin />} />
-                        <Route path='sign-up' element={<Signup />} />
-                    </>
-                )
-                }
-                <Route path='*' element={<NotFound />} />
-            </Routes>
-        </ErrorBoundary>
+        <Routes >
+            {authenticated ? (
+                <>
+                    <Route index element={<Layout><Home /></Layout>} />
+                    <Route path="messenger" element={<Layout><Messenger /></Layout>} />
+                    <Route path="search" element={<Layout><Search /></Layout>} />
+                    <Route path="me" element={<Layout><Me /></Layout>} />
+                </>
+            ) : (
+                <>
+                    <Route path='sign-in' element={<Signin />} />
+                    <Route path='sign-up' element={<Signup />} />
+                </>
+            )
+            }
+            <Route path='*' element={<NotFound />} />
+        </Routes>
     )
-}
-
-interface State {
-    applicationError: ApplicationError | null;
-    unauthorizedError: boolean;
-}
-
-class ErrorBoundary extends React.Component<RouteProps, State> {
-    constructor(props: any) {
-        super(props);
-        this.state = { applicationError: null, unauthorizedError: false };
-    }
-
-    static getDerivedStateFromError(error: any) {
-        // Обновить состояние с тем, чтобы следующий рендер показал запасной UI.
-        if (error instanceof UnauthorizedError)
-            return { unauthorizedError: true };
-
-        return { unauthorizedError: false, applicationError: error as ApplicationError };
-    }
-
-    render() {
-        // const navigate = useNavigate();
-        // if (this.state.unauthorizedError)
-        //     navigate('sign-in');
-
-        if (this.state.applicationError)
-            return <ErrorPage message={this.state.applicationError.message}></ErrorPage>
-
-        return this.props.children;
-    }
 }

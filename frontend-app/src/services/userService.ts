@@ -4,12 +4,19 @@ import { sessionService } from "./sessionService";
 
 class UserService {
     public async signin(options: UserAuthenticateOptions): Promise<AuthenticatedUser> {
-        return fetch('api/user/signin', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(options)
-        })
-            .then(handleJsonResponse as ResponseHandler<AuthenticatedUser>);
+        return Promise.resolve<AuthenticatedUser>({
+            contactPhone: '+7(950)859-07-02',
+            followersCount: 0,
+            followsCount: 0,
+            login: 'admin',
+            token: 'that\'s fucking token'
+        });
+        // return fetch('api/user/signin', {
+        //     method: 'POST',
+        //     headers: { 'Content-Type': 'application/json' },
+        //     body: JSON.stringify(options)
+        // })
+        //     .then(handleJsonResponse as ResponseHandler<AuthenticatedUser>);
     }
 
     public signout() {

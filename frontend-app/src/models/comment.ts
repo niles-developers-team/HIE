@@ -3,7 +3,7 @@ import { User, ClientRequest, GetOptions, Validation } from ".";
 
 export interface Comment {
     id?: number;
-    createdDate: string;
+    createdDate?: string;
     text: string;
 
     parent?: Comment;

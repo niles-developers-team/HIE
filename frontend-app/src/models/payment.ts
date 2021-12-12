@@ -1,4 +1,4 @@
-import { Benefactor, Client, GetOptions, Validation } from ".";
+import { Benefactor, Client, ClientRequest, GetOptions, Validation } from ".";
 
 export interface Payment {
     id?: number;
@@ -9,7 +9,7 @@ export interface Payment {
 
     benefactor?: Benefactor;
     client?: Client;
-    request?: Request;
+    request?: ClientRequest;
 }
 
 export enum PaymentStatuses {

@@ -1,5 +1,5 @@
 import { Action } from "redux";
-import { ApplicationError, GetOptions, Message, MessageValidation, SnackbarVariant } from "../../models";
+import { ApplicationError, AppState, AppThunkDispatch, GetOptions, Message, MessageValidation, SnackbarVariant } from "../../models";
 import { AppThunkAction } from "../../models/reduxModels";
 import { snackbarActions } from "../snackbarStore";
 import { messageService } from "../../services";
@@ -108,16 +108,19 @@ function clearEditionState(): ClearEditionState {
 }
 
 function saveMessage(model: Message): AppThunkAction<Promise<CreateSuccess | SaveFailure>> {
-    return async (dispatch) => {
+    return async (dispatch: AppThunkDispatch, getState: () => AppState) => {
         dispatch(request(model));
 
         try {
+            const { messageState } = getState();
             const result = await messageService.create(model);
+            if (messageState.modelsLoading === false)
+                messageState.models.push(result);
             return dispatch(createSuccess(result));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 
@@ -137,8 +140,8 @@ function getMessages(options: GetOptions): AppThunkAction<Promise<GetMessagesSuc
             return dispatch(success(result));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 
@@ -169,8 +172,8 @@ function getMessage(id: number): AppThunkAction<Promise<GetSuccess | GetFailure>
             return dispatch(success(message));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 
@@ -190,8 +193,8 @@ function deleteMessages(ids: number[]): AppThunkAction<Promise<DeleteSuccess | D
             return dispatch(success());
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 

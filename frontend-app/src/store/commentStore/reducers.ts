@@ -17,7 +17,12 @@ export function commentReducer(prevState: CommentState = initialState, action: C
             return { ...prevState, ...state };
         }
         case ActionTypes.getCommentsSuccess: {
-            const state: ModelsState = { modelsLoading: false, models: action.comments };
+            let models = action.comments;
+            if (prevState.modelsLoading === false) {
+                models = [...prevState.models, ...models];
+            }
+
+            const state: ModelsState = { modelsLoading: false, models: models };
             return { ...prevState, ...state };
         }
         case ActionTypes.getCommentsFailure: {
@@ -41,7 +46,7 @@ export function commentReducer(prevState: CommentState = initialState, action: C
         case ActionTypes.saveRequest: return prevState;
         case ActionTypes.createSuccess: {
             if (prevState.modelsLoading === true || prevState.modelLoading === true) return prevState;
-            
+
             const updatedModel = { ...prevState.model, ...action.comment };
             const updatedModels = prevState.models.concat(action.comment);
 

@@ -224,14 +224,12 @@ function signin(options: UserAuthenticateOptions): AppThunkAction<Promise<Signin
             if (result && result.token && sessionService.signIn(result.token)) {
                 return dispatch(success(result));
             } else {
-                const error: ApplicationError = new ApplicationError('Неправильное имя пользователя или пароль');
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
-                return dispatch(failure(error));
+                throw new ApplicationError('Неправильное имя пользователя или пароль');
             }
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                return dispatch(failure(error));
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
             return dispatch(failure(error));
         }
 
@@ -262,8 +260,8 @@ function saveUser(user: User): AppThunkAction<Promise<CreateSuccess | UpdateSucc
             }
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
             return dispatch(failure(error));
         }
 
@@ -287,8 +285,8 @@ function getUsers(options: GetOptions): AppThunkAction<Promise<GetUsersSuccess |
             return dispatch(success(result));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
             return dispatch(failure(error));
         }
 
@@ -324,8 +322,8 @@ function getUser(id?: number): AppThunkAction<Promise<GetSuccess | GetFailure>> 
             return dispatch(success(user));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
             return dispatch(failure(error));
         }
 
@@ -348,8 +346,7 @@ function updateClientDetails(client: Client): AppThunkAction<Promise<UpdateClien
             return dispatch(updateSuccess(result));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 
@@ -372,8 +369,7 @@ function updateBenefactorDetails(benefactor: Benefactor): AppThunkAction<Promise
             return dispatch(updateSuccess(result));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 
@@ -393,8 +389,8 @@ function deleteUsers(ids: number[]): AppThunkAction<Promise<DeleteSuccess | Dele
             return dispatch(success());
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
 
@@ -436,8 +432,8 @@ function followUser(user: User): AppThunkAction<Promise<FollowUserSuccess | Foll
             return dispatch(success(user));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
-                dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
+
+            dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
     };

@@ -1,3 +1,5 @@
+import { ClientRequest, User } from ".";
+
 export enum SnackbarVariant {
     success = 'success',
     error = 'error',
@@ -32,4 +34,11 @@ export class ApplicationError extends Error {
 
  export interface StorageItem {
     token: string;
+}
+
+export interface Feed {
+    user: User;
+    request?: ClientRequest;
+    paymentsCount?: number;
+    date: string;
 }

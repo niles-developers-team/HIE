@@ -129,7 +129,7 @@ function saveRequest(model: ClientRequest): AppThunkAction<Promise<CreateClientR
             }
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
+            
                 dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
@@ -151,7 +151,7 @@ function getRequests(options: GetOptions): AppThunkAction<Promise<GetClientReque
             return dispatch(success(result));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
+            
                 dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
@@ -181,7 +181,7 @@ function getRequest(id: number): AppThunkAction<Promise<GetClientRequestSuccess 
             return dispatch(success(request));
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
+            
                 dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }
@@ -202,7 +202,7 @@ function deleteRequests(ids: number[]): AppThunkAction<Promise<DeleteClientReque
             return dispatch(success());
         }
         catch (error: any) {
-            if (error instanceof ApplicationError)
+            
                 dispatch(snackbarActions.showSnackbar(error.message, SnackbarVariant.error));
             return dispatch(failure(error));
         }

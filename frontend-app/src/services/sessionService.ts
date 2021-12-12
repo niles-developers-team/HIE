@@ -36,7 +36,8 @@ class SessionService {
     }
 
     private getStorageItem(): StorageItem {
-        let storageValue: StorageItem = JSON.parse(sessionStorage.getItem(this.storageKey) || '');
+        let tempStorageValue = sessionStorage.getItem(this.storageKey);
+        let storageValue: StorageItem = tempStorageValue ? JSON.parse(tempStorageValue) : {};
         
         if (!storageValue || !this.filterToken(storageValue.token)) {
             storageValue.token = '';
