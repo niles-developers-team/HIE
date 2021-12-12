@@ -2,8 +2,10 @@
 using Hie.Domain.Features.Profile.Command.FollowCommand;
 using Hie.Domain.Features.Profile.Command.SignInCommand;
 using Hie.Domain.Features.Profile.Command.SignInCommand.ViewModels;
+using Hie.Domain.Features.Profile.Queries.SearchUser;
 using Hie.Domain.Features.Profile.Query;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Hie.API.Controllers {
@@ -33,6 +35,13 @@ namespace Hie.API.Controllers {
     [HttpGet("user")]
     public async Task<ActionResult<UserVm>> Follow() {
       return await Mediator.Send(new UserByIdQuery());
+    }
+
+    [Authorize]
+    [HttpGet("search")]
+    public async Task<ActionResult<IReadOnlyCollection<SearchUserVm>>> Search(string searchText) {
+      var list = await Mediator.Send(new SearchUserQuery{ SearchString = searchText });
+      return Ok(list);
     }
 
     [Authorize]

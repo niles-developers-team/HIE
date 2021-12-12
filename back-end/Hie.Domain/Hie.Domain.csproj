@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Hie.Helpers\Hie.Helpers.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\RequestComments\Queries\" />
-  </ItemGroup>
-
 </Project>
