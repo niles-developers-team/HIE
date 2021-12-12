@@ -46,7 +46,7 @@ export const ChatComponent = withStyles(styles)(function (props: Props) {
         if (userState.authenticating || !userState.currentUser) return;
 
         const newMessage: Message = {
-            createdDate: moment().format('yyyy-MM-dd HH:mm'),
+            createDate: moment().format('yyyy-MM-dd HH:mm'),
             text: message,
             recepientId: recepientId ? parseInt(recepientId) : 0,
             requestId: requestId ? parseInt(requestId) : 0,
@@ -64,7 +64,7 @@ export const ChatComponent = withStyles(styles)(function (props: Props) {
         return (<ListItem>
             <ListItemText
                 primary={message.text}
-                secondary={`${message.recepient?.login || ''} ${message.createdDate}`}
+                secondary={`${message.recepientLogin || ''} ${message.createDate}`}
             />
         </ListItem>);
     });

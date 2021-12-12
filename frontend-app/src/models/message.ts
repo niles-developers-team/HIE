@@ -11,9 +11,10 @@ export interface Chat {
 export interface Message {
     id?: number;
     text: string;
-    createdDate: string;
+    createDate: string;
 
     senderId?: number;
+    recepientLogin?: string;
     recepient?: User;
     recepientId?: number;
     requestId?: number;
@@ -32,7 +33,7 @@ export interface MessageValidation extends Validation {
 export namespace Message {
     export const initial: Message = {
         text: '',        
-        createdDate: moment().format('yyyy-MM-dd HH:mm'),
+        createDate: moment().format('yyyy-MM-dd HH:mm'),
     }
 }
 
