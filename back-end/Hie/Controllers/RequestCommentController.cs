@@ -1,12 +1,5 @@
-﻿using Hie.DB.Entities;
-using Hie.Domain.Enums;
-using Hie.Domain.Features.AutoPaymentFeature.Queries;
-using Hie.Domain.Features.Requests.Commands.ApproveRequest;
-using Hie.Domain.Features.Requests.Commands.CloseRequest;
-using Hie.Domain.Features.Requests.Commands.CreateRequest;
-using Hie.Domain.Features.Requests.Commands.UpdateRequest;
-using Hie.Domain.Features.Requests.Queries.BenefactorRequest;
-using Hie.Domain.Features.Requests.Queries.MyRequest;
+﻿using Hie.Domain.Features.RequestComments.Commands.CreateRequestComment;
+using Hie.Domain.Features.RequestComments.Queries.CommentsForRequest;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,33 +13,16 @@ namespace Hie.API.Controllers {
     public RequestCommentController() {
     }
 
-    [HttpGet("all")]
-    public async Task<ActionResult<IReadOnlyCollection<MyRequestVm>>> Comments() {
-      var list = await Mediator.Send(new MyRequestsQuery {
-        RequestStatus = null,
+    [HttpGet("{requestId}")]
+    public async Task<ActionResult<IReadOnlyCollection<CommentForRequestVm>>> Comments(int requestId) {
+      var list = await Mediator.Send(new CommentsForRequestQuery {
+        RequestId = requestId,
       });
       return Ok(list);
     }
 
     [HttpPost]
-    public async Task<ActionResult<long>> Create(CreateRequestCommand command) {
-      return await Mediator.Send(command);
-    }
-
-    [HttpPut("approve")]
-    public async Task<ActionResult> Approve(ApproveRequestCommand command) {
-      await Mediator.Send(command);
-      return Ok();
-    }
-
-    [HttpPut("close")]
-    public async Task<ActionResult> Close(CloseRequestCommand command) {
-      await Mediator.Send(command);
-      return Ok();
-    }
-
-    [HttpPut]
-    public async Task<ActionResult<long>> Update(UpdateRequestCommand command) {
+    public async Task<ActionResult<long>> Create(CreateRequestCommentCommand command) {
       return await Mediator.Send(command);
     }
   }

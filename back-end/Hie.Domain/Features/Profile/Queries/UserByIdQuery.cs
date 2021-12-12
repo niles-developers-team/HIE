@@ -14,12 +14,12 @@ namespace Hie.Domain.Features.Profile.Query {
   public class UserByIdQuery : IRequest<UserVm> {
     public long? UserId { get; set; }
 
-    public class UserFollowCommandHandler: IRequestHandler<UserByIdQuery, UserVm> {
+    public class UserByIdQueryHandler: IRequestHandler<UserByIdQuery, UserVm> {
       private readonly IAppDbContext _context;
       private readonly IMapper _mapper;
       private readonly ICurrentUserService _currentUserService;
 
-      public UserFollowCommandHandler(IAppDbContext context, ICurrentUserService currentUserService, IMapper mapper) {
+      public UserByIdQueryHandler(IAppDbContext context, ICurrentUserService currentUserService, IMapper mapper) {
         _context = context;
         _mapper = mapper;
         _currentUserService = currentUserService;

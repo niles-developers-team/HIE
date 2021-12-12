@@ -1,15 +1,14 @@
 ﻿using Hie.DB.Entities;
-using Hie.Domain.Enums;
 using Hie.Domain.Repositories;
 using Hie.Domain.Services;
 using MediatR;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Hie.Domain.Features.RequestComments.Commands.CreateRequestComment {
   public class CreateRequestCommentCommand: IRequest<long> {
     public long? ParentId { get; set; }
+    public long RequestId { get; set; }
     public string Text { get; set; }
 
     public class CreateRequestCommentCommandHandler: IRequestHandler<CreateRequestCommentCommand, long> {
@@ -28,6 +27,7 @@ namespace Hie.Domain.Features.RequestComments.Commands.CreateRequestComment {
           CreateDateUtc = _dateService.GetDate(),
           UserId = _currentUserService.UserId.Value,
           ParentId = request.ParentId,
+          RequestId = request.RequestId,
           Text = request.Text,
         };
 
