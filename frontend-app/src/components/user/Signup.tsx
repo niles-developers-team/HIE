@@ -1,4 +1,4 @@
-import { Alert, Button, CircularProgress, Grid, Link, Snackbar, TextField } from "@mui/material";
+import { Alert, Button, Card, CardContent, CardHeader, CircularProgress, Grid, IconButton, Link, Snackbar, TextField, Typography } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import { snackbarActions } from "../../store/snackbarStore";
 import { userActions } from "../../store/userStore";
 import { bootstrap } from "../../theme";
 import { mergeStyles } from "../../utilities/mergeStyles";
+import { Close } from "@mui/icons-material";
 
 const styles = mergeStyles(bootstrap);
 
@@ -29,11 +30,18 @@ export const Signup = withStyles(styles)(function (props: Props) {
     const [message, setMessage] = useState<string>('');
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [login, setUsername] = useState<string>('22222222');
-    const [password, setPassword] = useState<string>('22222222');
-    const [phone, setPhone] = useState<string>('22222222');
-    const [email, setEmail] = useState<string>('22222222');
+    const [login, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [phone, setPhone] = useState<string>('');
+    const [email, setEmail] = useState<string>('');
     const [formErrors, setFormErrors] = useState<UserValidation>({ isValid: false });
+
+    const [clientOrBenefactor, setClientOrBenefactor] = useState<boolean>(false);
+
+    const [inn, setINN] = useState<string>('');
+    const [kpp, setKPP] = useState<string>('');
+    const [ogrn, setOgrn] = useState<string>('');
+    const [personalBankAccountn, setPersonalBankAccount] = useState<string>('');
 
     useEffect(() => {
         if (snackbarState.show !== true) {
@@ -54,7 +62,10 @@ export const Signup = withStyles(styles)(function (props: Props) {
         } else {
             setPassword('');
         }
-    }, [userState.authenticating, navigate])
+    }, [userState.authenticating, navigate]);
+    useEffect(() => {
+        
+    })
     useEffect(() => {
         setLoading(userState.modelLoading);
     }, [userState.modelLoading]);
@@ -64,7 +75,9 @@ export const Signup = withStyles(styles)(function (props: Props) {
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         setLoading(true);
         event.preventDefault();
-        dispatch(userActions.saveUser({ login, password, contactPhone: phone, email, followersCount: 0, followsCount: 0 }));
+        dispatch(userActions.saveUser({ login, password, phone: phone, email, followersCount: 0, followsCount: 0 }));
+        
+        navigate('/sign-in');
     }
 
     function handleUserNameChange(event: ChangeEvent<HTMLInputElement>) { setUsername(event.target && event.target.value); }
@@ -75,74 +88,141 @@ export const Signup = withStyles(styles)(function (props: Props) {
     return (
         <Grid className={classes.h100} container direction="column" component="main" alignItems="center" justifyContent="center">
             <form className={classes.mx1} onSubmit={handleSubmit}>
-                <Grid>
-                    <TextField
-                        required
-                        fullWidth
-                        autoFocus
-                        variant="outlined"
-                        margin="normal"
-                        placeholder="Введите имя пользователя"
-                        label="Имя пользователя"
-                        name="userName"
-                        autoComplete="username"
-                        value={login}
-                        onChange={handleUserNameChange}
-                    />
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Пароль"
-                        type="password"
-                        autoComplete="current-password"
-                        value={password}
-                        onChange={handlePasswordChange}
-                    />
-                </Grid>
-                <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="phone"
-                    label="Номер телефона"
-                    type="phone"
-                    value={phone}
-                    onChange={(event) => { setPhone(event && event.target.value) }}
-                />
-                <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="email"
-                    label="E-mail"
-                    type="email"
-                    value={email}
-                    onChange={(event) => { setEmail(event && event.target.value) }}
-                />
-                <div className="submit">
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        disabled={loading || !formErrors.isValid}
-                    >
-                        {!loading && <div>Зарегистрироваться</div>}
-                        {loading && <CircularProgress size={24} />}
-                    </Button>
-                </div>
-                <Grid container>
-                    <Grid item>
-                        <Link href="/sign-in" variant="body2">
-                            Уже есть аккаунт?
-                        </Link>
-                    </Grid>
-                </Grid>
+                <Card>
+                    <CardHeader title="Регистрация" />
+                    <CardContent>
+                        <Grid>
+                            <TextField
+                                required
+                                fullWidth
+                                autoFocus
+                                variant="outlined"
+                                margin="normal"
+                                placeholder="Введите имя пользователя"
+                                label="Имя пользователя"
+                                name="userName"
+                                autoComplete="username"
+                                value={login}
+                                onChange={handleUserNameChange}
+                            />
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Пароль"
+                                type="password"
+                                autoComplete="current-password"
+                                value={password}
+                                onChange={handlePasswordChange}
+                            />
+                        </Grid>
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="phone"
+                            label="Номер телефона"
+                            type="phone"
+                            value={phone}
+                            onChange={(event) => { setPhone(event && event.target.value) }}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="email"
+                            label="E-mail"
+                            type="email"
+                            value={email}
+                            onChange={(event) => { setEmail(event && event.target.value) }}
+                        />
+                        <Grid container direction="row" className={classes.mt1}>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                disabled={loading || !formErrors.isValid || clientOrBenefactor}
+                                onClick={() => setClientOrBenefactor(true)}
+                            >
+                                Ищу помощь
+                            </Button>
+                            <Button
+                                className={classes.mt2}
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                disabled={loading || !formErrors.isValid}
+                            >
+                                {!loading && <div>Зарегистрироваться</div>}
+                                {loading && <CircularProgress size={24} />}
+                            </Button>
+                        </Grid>
+                        <Grid container>
+                            <Grid item>
+                                <Link href="/sign-in" variant="body2">
+                                    Уже есть аккаунт?
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
+                {clientOrBenefactor && <Card className={classes.mt3}>
+                    <CardHeader title="Данные компании"
+                        action={
+                            <IconButton onClick={() => setClientOrBenefactor(false)} aria-label="settings">
+                                <Close />
+                            </IconButton>
+                        } />
+                    <CardContent>
+                        <Grid>
+                            <TextField
+                                required
+                                fullWidth
+                                autoFocus
+                                variant="outlined"
+                                margin="normal"
+                                placeholder="Введите ИНН"
+                                label="ИНН"
+                                value={inn}
+                                onChange={(event) => { setINN(event && event.target.value) }}
+                            />
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="КПП"
+                                value={kpp}
+                                onChange={(event) => { setKPP(event && event.target.value) }}
+                            />
+                        </Grid>
+                        <Grid>
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="ОГРН"
+                                value={ogrn}
+                                onChange={(event) => { setOgrn(event && event.target.value) }}
+                            />
+                            <TextField
+                                variant="outlined"
+                                margin="normal"
+                                required
+                                fullWidth
+                                label="Номер счета"
+                                value={personalBankAccountn}
+                                onChange={(event) => { setPersonalBankAccount(event && event.target.value) }}
+                            />
+                        </Grid>
+                    </CardContent>
+                </Card>}
             </form>
             <Snackbar
                 open={open}

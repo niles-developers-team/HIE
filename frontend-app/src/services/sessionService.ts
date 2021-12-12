@@ -18,7 +18,7 @@ class SessionService {
 
     public signIn(token: string): boolean {
         const storageItem = this.getStorageItem();
-        if(this.filterToken(token))
+        if(!this.filterToken(token))
         {
             return false;
         }
@@ -81,7 +81,7 @@ class SessionService {
                 if (matches && matches.length > 0) {
                     delete init["credentials"]; // we cant put this header because of CROS limitations
                     const offset = matches[0].length;
-                    input = `http://localhost:5000/api/${input.substring(offset)}`;
+                    input = `https://localhost:44308/${input.substring(offset)}`;
                 }
             }
 

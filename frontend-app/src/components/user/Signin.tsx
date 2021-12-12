@@ -1,4 +1,4 @@
-import { Alert, Button, CircularProgress, Grid, Link, Snackbar, TextField } from "@mui/material";
+import { Alert, Button, Card, CardContent, CircularProgress, Grid, Link, Snackbar, TextField } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,7 @@ const styles = mergeStyles(bootstrap);
 
 interface Props extends WithStyles<typeof styles> { }
 
-export const Signin = withStyles(styles)(function(props: Props) {
+export const Signin = withStyles(styles)(function (props: Props) {
     const { classes } = props;
 
     const navigate = useNavigate();
@@ -29,8 +29,8 @@ export const Signin = withStyles(styles)(function(props: Props) {
     const [message, setMessage] = useState<string>('');
 
     const [loading, setLoading] = useState<boolean>(false);
-    const [login, setUsername] = useState<string>('22222222');
-    const [password, setPassword] = useState<string>('22222222');
+    const [login, setUsername] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
     const [formErrors, setFormErrors] = useState<UserValidation>({ isValid: false });
 
     useEffect(() => {
@@ -60,7 +60,7 @@ export const Signin = withStyles(styles)(function(props: Props) {
     function handleSubmit(event: FormEvent<HTMLFormElement>) {
         setLoading(true);
         event.preventDefault();
-        dispatch(userActions.signin({ login, password }));
+        dispatch(userActions.signin({ phone: login, email: login, password }));
     }
 
     function handleUserNameChange(event: ChangeEvent<HTMLInputElement>) { setUsername(event.target && event.target.value); }
@@ -71,54 +71,58 @@ export const Signin = withStyles(styles)(function(props: Props) {
 
     return (
         <Grid className={classes.h100} container direction="column" component="main" alignItems="center" justifyContent="center">
-            <form className={classes.mx1} onSubmit={handleSubmit}>
-                <TextField
-                    required
-                    fullWidth
-                    autoFocus
-                    variant="outlined"
-                    margin="normal"
-                    placeholder="Введите имя пользователя"
-                    id="userName"
-                    label="Имя пользователя"
-                    name="userName"
-                    autoComplete="username"
-                    value={login}
-                    onChange={handleUserNameChange}
-                />
-                <TextField
-                    variant="outlined"
-                    margin="normal"
-                    required
-                    fullWidth
-                    name="password"
-                    label="Пароль"
-                    type="password"
-                    id="password"
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={handlePasswordChange}
-                />
-                <div className="submit">
-                    <Button
-                        type="submit"
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        disabled={loading || !formErrors.isValid}
-                    >
-                        {!loading && <div>Авторизоваться</div>}
-                        {loading && <CircularProgress size={24} />}
-                    </Button>
-                </div>
-                <Grid container>
-                    <Grid item>
-                        <Link href="/sign-up" variant="body2">
-                            Еще нет аккаунта?
-                        </Link>
-                    </Grid>
-                </Grid>
-            </form>
+            <Card>
+                <CardContent>
+                    <form className={classes.mx1} onSubmit={handleSubmit}>
+                        <TextField
+                            required
+                            fullWidth
+                            autoFocus
+                            variant="outlined"
+                            margin="normal"
+                            placeholder="Введите телефон или почту"
+                            id="userName"
+                            label="Телефон или почта"
+                            name="userName"
+                            autoComplete="username"
+                            value={login}
+                            onChange={handleUserNameChange}
+                        />
+                        <TextField
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Пароль"
+                            type="password"
+                            id="password"
+                            autoComplete="current-password"
+                            value={password}
+                            onChange={handlePasswordChange}
+                        />
+                        <div className="submit">
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                disabled={loading || !formErrors.isValid}
+                            >
+                                {!loading && <div>Авторизоваться</div>}
+                                {loading && <CircularProgress size={24} />}
+                            </Button>
+                        </div>
+                        <Grid container>
+                            <Grid item>
+                                <Link href="/sign-up" variant="body2">
+                                    Еще нет аккаунта?
+                                </Link>
+                            </Grid>
+                        </Grid>
+                    </form>
+                </CardContent>
+            </Card>
             <Snackbar
                 open={open}
                 onClose={handleSnackbarClose}

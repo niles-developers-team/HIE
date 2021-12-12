@@ -3,7 +3,7 @@ import { handleJsonResponse, handleResponse, ResponseHandler } from "../utilitie
 
 class MessageService {
     public async getChats(userId: number): Promise<Chat[]> {
-        let url = `api/chats?userId=${userId}`;
+        let url = `api/ChatMessage/chats?userId=${userId}`;
         return fetch(url, {
             credentials: 'include',
             method: 'GET',
@@ -12,7 +12,7 @@ class MessageService {
     }
 
     public async get(options?: MessageGetOptions): Promise<Message[]> {
-        let url = 'api/user';
+        let url = 'api/ChatMessage/chat';
         let conditionIndex: number = 0;
         if (options) {
             if (options.id)
@@ -37,7 +37,7 @@ class MessageService {
     }
 
     public async create(model: Message): Promise<Message> {
-        return fetch('api/user', {
+        return fetch('api/ChatMessage', {
             credentials: 'include',
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

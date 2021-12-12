@@ -255,8 +255,9 @@ function saveUser(user: User): AppThunkAction<Promise<CreateSuccess | UpdateSucc
                 return dispatch(updateSuccess(result));
             } else {
                 const result = await userService.create(user);
+                user.id = result;
                 dispatch(snackbarActions.showSnackbar('Пользователь успешно сохранен', SnackbarVariant.success));
-                return dispatch(createSuccess(result));
+                return dispatch(createSuccess(user));
             }
         }
         catch (error: any) {

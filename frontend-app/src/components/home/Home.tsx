@@ -24,13 +24,13 @@ const feeds: Feed[] = [{
     request: {
         amount: 100,
         deadlineDate: '2021-12-11',
-        description: 'Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
         priority: RequestPriorities.Medium,
         status: RequestStatuses.InProgress,
         totalAmount: 333
     },
     user: {
-        contactPhone: '+7(000)000-00-00',
+        phone: '+7(000)000-00-00',
         followersCount: 100,
         followsCount: 333,
         login: 'microsoft'
@@ -41,13 +41,13 @@ const feeds: Feed[] = [{
     request: {
         amount: 100,
         deadlineDate: '2021-12-11',
-        description: 'Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Convallis aenean et tortor at risus viverra. Non quam lacus suspendisse faucibus interdum posuere lorem ipsum.',
         priority: RequestPriorities.Medium,
         status: RequestStatuses.InProgress,
         totalAmount: 333
     },
     user: {
-        contactPhone: '+7(000)000-00-00',
+        phone: '+7(000)000-00-00',
         followersCount: 100,
         followsCount: 333,
         login: 'microsoft'
@@ -58,13 +58,13 @@ const feeds: Feed[] = [{
     request: {
         amount: 100,
         deadlineDate: '2021-12-11',
-        description: 'Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id faucibus nisl tincidunt eget nullam non nisi est sit.',
         priority: RequestPriorities.Medium,
         status: RequestStatuses.InProgress,
         totalAmount: 333
     },
     user: {
-        contactPhone: '+7(000)000-00-00',
+        phone: '+7(000)000-00-00',
         followersCount: 100,
         followsCount: 333,
         login: 'microsoft'
@@ -75,13 +75,13 @@ const feeds: Feed[] = [{
     request: {
         amount: 100,
         deadlineDate: '2021-12-11',
-        description: 'Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         priority: RequestPriorities.Medium,
         status: RequestStatuses.InProgress,
         totalAmount: 333
     },
     user: {
-        contactPhone: '+7(000)000-00-00',
+        phone: '+7(000)000-00-00',
         followersCount: 100,
         followsCount: 333,
         login: 'microsoft'
@@ -92,88 +92,20 @@ const feeds: Feed[] = [{
     request: {
         amount: 100,
         deadlineDate: '2021-12-11',
-        description: 'Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!',
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Est sit amet facilisis magna etiam tempor. Fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate. Habitasse platea dictumst quisque sagittis purus sit.',
         priority: RequestPriorities.Medium,
         status: RequestStatuses.InProgress,
         totalAmount: 333
     },
     user: {
-        contactPhone: '+7(000)000-00-00',
+        phone: '+7(000)000-00-00',
         followersCount: 100,
         followsCount: 333,
         login: 'microsoft'
     },
     paymentsCount: 333333,
     date: '2021-12-12 12:33'
-}, {
-    request: {
-        amount: 100,
-        deadlineDate: '2021-12-11',
-        description: 'Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!',
-        priority: RequestPriorities.Medium,
-        status: RequestStatuses.InProgress,
-        totalAmount: 333
-    },
-    user: {
-        contactPhone: '+7(000)000-00-00',
-        followersCount: 100,
-        followsCount: 333,
-        login: 'microsoft'
-    },
-    paymentsCount: 333333,
-    date: '2021-12-12 12:33'
-}, {
-    request: {
-        amount: 100,
-        deadlineDate: '2021-12-11',
-        description: 'Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!',
-        priority: RequestPriorities.Medium,
-        status: RequestStatuses.InProgress,
-        totalAmount: 333
-    },
-    user: {
-        contactPhone: '+7(000)000-00-00',
-        followersCount: 100,
-        followsCount: 333,
-        login: 'microsoft'
-    },
-    paymentsCount: 333333,
-    date: '2021-12-12 12:33'
-}, {
-    request: {
-        amount: 100,
-        deadlineDate: '2021-12-11',
-        description: 'Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!',
-        priority: RequestPriorities.Medium,
-        status: RequestStatuses.InProgress,
-        totalAmount: 333
-    },
-    user: {
-        contactPhone: '+7(000)000-00-00',
-        followersCount: 100,
-        followsCount: 333,
-        login: 'microsoft'
-    },
-    paymentsCount: 333333,
-    date: '2021-12-12 12:33'
-}, {
-    request: {
-        amount: 100,
-        deadlineDate: '2021-12-11',
-        description: 'Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!Дайте денег!!!!',
-        priority: RequestPriorities.Medium,
-        status: RequestStatuses.InProgress,
-        totalAmount: 333
-    },
-    user: {
-        contactPhone: '+7(000)000-00-00',
-        followersCount: 100,
-        followsCount: 333,
-        login: 'microsoft'
-    },
-    paymentsCount: 333333,
-    date: '2021-12-12 12:33'
-}];
+},];
 
 export const Home = withStyles(styles)(function (props: Props) {
     const { classes } = props;

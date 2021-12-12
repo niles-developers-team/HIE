@@ -4,33 +4,36 @@ import { sessionService } from "./sessionService";
 
 class UserService {
     public async signin(options: UserAuthenticateOptions): Promise<AuthenticatedUser> {
-        return Promise.resolve<AuthenticatedUser>({
-            contactPhone: '+7(950)859-07-02',
-            followersCount: 0,
-            followsCount: 0,
-            login: 'admin',
-            token: 'that\'s fucking token'
-        });
-        // return fetch('api/user/signin', {
-        //     method: 'POST',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify(options)
-        // })
-        //     .then(handleJsonResponse as ResponseHandler<AuthenticatedUser>);
+        return fetch('api/user/signin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(options)
+        })
+            .then(handleJsonResponse as ResponseHandler<AuthenticatedUser>);
     }
 
     public signout() {
         sessionService.signOut();
     }
 
-    public async create(user: User): Promise<User> {
-        return fetch('api/user', {
-            credentials: 'include',
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(user)
-        })
-            .then(handleJsonResponse as ResponseHandler<AuthenticatedUser>);
+    public async create(user: User): Promise<number> {
+        if (user.client) {
+            return fetch('api/user/signUp/client', {
+                credentials: 'include',
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user)
+            })
+                .then(handleJsonResponse as ResponseHandler<number>);
+        } else {
+            return fetch('api/user/signUp/benefactor', {
+                credentials: 'include',
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user)
+            })
+                .then(handleJsonResponse as ResponseHandler<number>);
+        }
     }
 
     public async update(user: User): Promise<User> {
@@ -64,7 +67,7 @@ class UserService {
     }
 
     public async get(options?: GetOptions): Promise<User[]> {
-        let url = 'api/user';
+        let url = 'api/user/search';
         let conditionIndex: number = 0;
         if (options) {
             if (options.id)
@@ -93,11 +96,10 @@ class UserService {
     }
 
     public async follow(followerId: number, followedId: number): Promise<void> {
-        return fetch('api/user/follow', {
+        return fetch(`api/user/follow/${followedId}`, {
             credentials: 'include',
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ followerId, followedId })
+            headers: { 'Content-Type': 'application/json' }
         })
             .then(handleResponse);
     }
@@ -154,7 +156,7 @@ class UserService {
         const loginError = this.validateUsername(user.login);
         const passwordError = user.id ? '' : this.validatePassword(user.password);
         const emailError = this.validateEmail(user.email);
-        const phoneError = this.validatePhone(user.contactPhone);
+        const phoneError = this.validatePhone(user.phone);
         const isValid = !loginError
             && !passwordError
             && !emailError

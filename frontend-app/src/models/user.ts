@@ -5,7 +5,7 @@ export interface User {
     login: string;
     password?: string;
     email?: string;
-    contactPhone: string;
+    phone: string;
     client?: Client;
     benefactor?: Benefactor;
 
@@ -15,18 +15,48 @@ export interface User {
 
 export interface Client {
     id?: number;
-    bill: string;
+    kpp: string;
     inn: string;
+    ogrn: string;
+    personalBankAccount: string;
     approved: boolean;
 
     payments: Payment[];
     requests: Request[];
 }
 
+export interface CreateClient {
+    login: string;
+    password?: string;
+    email?: string;
+    contactPhone: string;
+    kpp: string;
+    inn: string;
+    ogrn: string;
+    personalBankAccount: string;
+}
+
+export interface CreateUser {
+    login: string;
+    password ?: string;
+    email ?: string;
+    phone: string;
+}
+export interface CreateClient extends CreateUser {
+    kpp: string;
+    inn: string;
+    ogrn: string;
+    personalBankAccount: string;
+}
+
+export interface CreateBenefactor extends CreateUser {
+    alwaysPayComission: boolean;
+}
+
 export interface Benefactor {
     id?: number;
     level: number;
-    alwaysCommisionToService: boolean;
+    alwaysPayComission: boolean;
 
     payments: Payment[];
     autoPayments: AutoPayment[];
@@ -38,7 +68,7 @@ export interface AuthenticatedUser extends User {
 export namespace User {
     export const initial: User = {
         email: '',
-        contactPhone: '',
+        phone: '',
         login: '',
         followersCount: 0,
         followsCount: 0
@@ -46,7 +76,8 @@ export namespace User {
 }
 
 export interface UserAuthenticateOptions {
-    login: string;
+    phone: string;
+    email: string;
     password: string;
 }
 

@@ -34,8 +34,8 @@ export function RoutesSwitch() {
             {authenticated ? (
                 <>
                     <Route index element={<Layout><Home /></Layout>} />
+                    <Route path="messenger/:recepientId" element={<Layout><ChatComponent /></Layout>} />
                     <Route path="messenger" element={<Layout><Messenger /></Layout>} />
-                    <Route path="messenger/:recepientId/:requestId" element={<Layout><ChatComponent /></Layout>} />
                     <Route path="search" element={<Layout><SearchComponent /></Layout>} />
                     <Route path="me" element={<Layout><Me /></Layout>} />
                 </>

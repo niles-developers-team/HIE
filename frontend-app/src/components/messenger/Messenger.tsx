@@ -1,12 +1,21 @@
 import { Forum } from "@mui/icons-material";
-import { CircularProgress, Container, Grid, IconButton, List, ListItem, ListItemText, Typography } from "@mui/material";
+import { Card, CircularProgress, Container, Grid, IconButton, List, ListItem, ListItemText, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { AppState, Chat } from "../../models";
 import { messageActions } from "../../store/messageStore";
 
-export function Messenger() {
+import clsx from "clsx";
+import { WithStyles, withStyles } from "@mui/styles";
+import { bootstrap, colors } from "../../theme";
+import { mergeStyles } from "../../utilities/mergeStyles";
+
+const styles = mergeStyles(bootstrap, colors);
+interface Props extends WithStyles<typeof styles> { }
+
+export const Messenger = withStyles(styles)(function(props: Props) {
+    const { classes } = props;
     const [chats, setChats] = useState<Chat[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const navigate = useNavigate();
@@ -21,7 +30,7 @@ export function Messenger() {
         if (userState.authenticating || !userState.currentUser) return;
 
         dispatch(messageActions.getChats(userState.currentUser?.id || 0));
-    });
+    }, [messageState.modelsLoading]);
 
     useEffect(() => {
         setLoading(messageState.chatsLoading);
@@ -37,9 +46,10 @@ export function Messenger() {
         <Container maxWidth="md">
             <Grid className="h100" container direction="column" component="main" alignItems="center" justifyContent="center">
                 {loading && <CircularProgress size={128} />}
+                <Card className={clsx(classes.w100, classes.mt3)}>
                 <List>
                     {chats.map((chat, index) => {
-                        <ListItem
+                        return (<ListItem
                             secondaryAction={
                                 <Grid>
                                     <IconButton edge="end" aria-label="delete" onClick={() => { handleOpenChat(chat.recepientId); }}>
@@ -51,10 +61,11 @@ export function Messenger() {
                                 primary={chat.recepientLogin}
                                 secondary={chat.lastMessage?.text || ''}
                             />
-                        </ListItem>
-                    })};
+                        </ListItem>);
+                    })}
                 </List>
+                </Card>
             </Grid>
         </Container >
     );
-}
+});

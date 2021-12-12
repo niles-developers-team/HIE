@@ -20,42 +20,58 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Hie {
-  public class Startup {
-    public Startup(IConfiguration configuration, IWebHostEnvironment environment) {
-      Configuration = configuration;
-      Environment = environment;
-    }
+namespace Hie
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
+        {
+            Configuration = configuration;
+            Environment = environment;
+        }
 
-    public IConfiguration Configuration { get; }
+        public IConfiguration Configuration { get; }
 
-    public IWebHostEnvironment Environment { get; }
+        public IWebHostEnvironment Environment { get; }
 
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services) {
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
 
-      DependencyInjection.AddDomainServices(services, Configuration);
-      DB.DependencyInjection.AddDb(services, Configuration, Environment);
+            DependencyInjection.AddDomainServices(services, Configuration);
+            DB.DependencyInjection.AddDb(services, Configuration, Environment);
 
-      services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-      services.AddScoped<ICurrentUserService, CurrentUserService>();
-      services.AddScoped<IDateService, DateService>();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+            services.AddScoped<IDateService, DateService>();
 
-      // configure strongly typed settings object
-      services.Configure<AppSettings>(Configuration.GetSection(AppSettings.SectionName));
+            // configure strongly typed settings object
+            services.Configure<AppSettings>(Configuration.GetSection(AppSettings.SectionName));
 
-      services.AddControllers();
-      services.AddSwaggerGen(c => {
-        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
-          Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(builder =>
+                {
+                    builder
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin();
+                });
+            });
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
                       Enter 'Bearer' [space] and then your token in the text input below.
                       \r\n\r\nExample: 'Bearer 12345abcdef'",
-          Name = "Authorization",
-          In = ParameterLocation.Header,
-          Type = SecuritySchemeType.ApiKey,
-          Scheme = "Bearer"
-        });
-        c.AddSecurityRequirement(new OpenApiSecurityRequirement(){ {
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement(){ {
           new OpenApiSecurityScheme {
             Reference = new OpenApiReference
               {
@@ -69,30 +85,34 @@ namespace Hie {
             new List<string>()
           }
         });
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hie", Version = "v1" });
-      });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hie", Version = "v1" });
+            });
+        }
+
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hie v1"));
+            }
+
+            app.UseMiddleware<JwtMiddleware>();
+
+            app.UseCustomExceptionHandler();
+            app.UseHttpsRedirection();
+
+            app.UseRouting();
+            app.UseCors();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
+        }
     }
-
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
-      if (env.IsDevelopment()) {
-        app.UseDeveloperExceptionPage();
-        app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hie v1"));
-      }
-
-      app.UseMiddleware<JwtMiddleware>();
-
-      app.UseCustomExceptionHandler();
-      app.UseHttpsRedirection();
-
-      app.UseRouting();
-
-      app.UseAuthorization();
-
-      app.UseEndpoints(endpoints => {
-        endpoints.MapControllers();
-      });
-    }
-  }
 }
