@@ -206,7 +206,7 @@ function validateMessage(message: Message): Validate {
     return { type: ActionTypes.validate, formErrors: result };
 }
 
-export default {
+const actions = {
     saveMessage,
     clearEditionState,
     getMessages,
@@ -214,4 +214,6 @@ export default {
     deleteMessages,
     validateMessage
 }
+
+export default actions;
 //#endregion

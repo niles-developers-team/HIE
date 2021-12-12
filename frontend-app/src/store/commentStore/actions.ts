@@ -206,7 +206,7 @@ function validateComment(comment: Comment): Validate {
     return { type: ActionTypes.validate, formErrors: result };
 }
 
-export default {
+const actions = {
     saveComment,
     clearEditionState,
     getComments,
@@ -214,4 +214,6 @@ export default {
     deleteComments,
     validateComment
 }
+
+export default actions;
 //#endregion

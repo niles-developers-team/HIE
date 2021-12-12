@@ -207,7 +207,7 @@ function validatePayment(payment: Payment): Validate {
     return { type: ActionTypes.validate, formErrors: result };
 }
 
-export default {
+const actions = {
     savePayment,
     clearEditionState,
     getPayments,
@@ -215,4 +215,6 @@ export default {
     deletePayments,
     validatePayment
 }
+
+export default actions
 //#endregion

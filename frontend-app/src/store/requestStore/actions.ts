@@ -218,7 +218,7 @@ function validateRequest(request: ClientRequest): Validate {
     return { type: ActionTypes.validate, formErrors: result };
 }
 
-export default {
+const actions = {
     saveRequest,
     clearEditionState,
     getRequests,
@@ -226,4 +226,6 @@ export default {
     deleteRequests,
     validateRequest
 }
+
+export default actions;
 //#endregion

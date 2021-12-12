@@ -73,7 +73,7 @@ export function userReducer(prevState: UserState = initialState, action: UserAct
             if (prevState.modelsLoading === true || prevState.modelLoading === true) return prevState;
 
             const updatedModel = { ...prevState.model, ...action.user };
-            const updatedModels = prevState.models.map(o => o.id == action.user.id ? action.user : o);
+            const updatedModels = prevState.models.map(o => o.id === action.user.id ? action.user : o);
 
             const modelsState: ModelsState = { modelsLoading: false, models: updatedModels };
             const modelState: ModelState = { modelLoading: false, model: updatedModel };
@@ -103,7 +103,7 @@ export function userReducer(prevState: UserState = initialState, action: UserAct
             const state: ModelState = { modelLoading: false, model: user };
             return { ...prevState, ...state }
         }
-        case ActionTypes.updateClientRequest: return prevState;
+        case ActionTypes.updateClientFailure: return prevState;
 
         case ActionTypes.deleteRequest: {
             const deleteState: DeleteState = { deleting: true, ids: action.ids };

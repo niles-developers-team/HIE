@@ -3,30 +3,31 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from "react-router-dom";
 
+import DocumentMeta from 'react-document-meta';
+
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import configureStore from './store/createStore';
+
 import { sessionService } from './services';
-
-
-const baseUrl = document
-  .getElementsByTagName("base")[0]
-  .getAttribute("href")!;
+import { RoutesSwitch } from './components';
 
 sessionService.init();
 
 const store = configureStore();
 
+const meta = { title: 'Help it easy' }
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
+    <DocumentMeta {...meta}>
+      <Provider store={store}>
+        <BrowserRouter>
+          <RoutesSwitch />
+        </BrowserRouter>
+      </Provider>
+    </DocumentMeta>
   </React.StrictMode>,
   document.getElementById('root')
 );

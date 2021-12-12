@@ -25,7 +25,9 @@ function hideSnackbar(): SnackbarActions {
     return { type: ActionType.hide };
 }
 
-export default {
+const actions = {
     showSnackbar,
     hideSnackbar,
-}
+};
+
+export default actions;

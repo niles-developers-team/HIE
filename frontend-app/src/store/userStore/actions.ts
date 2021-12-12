@@ -447,7 +447,7 @@ function followUser(user: User): AppThunkAction<Promise<FollowUserSuccess | Foll
     function failure(error: ApplicationError): FollowUserFailure { return { type: ActionTypes.followUserFailure, error: error }; }
 }
 
-export default {
+const actions = {
     signin,
     signout,
     saveUser,
@@ -461,4 +461,5 @@ export default {
     validateUser,
     followUser
 }
+export default actions;
 //#endregion

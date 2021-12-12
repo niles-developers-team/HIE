@@ -24,7 +24,7 @@ export type Authenticating = {
 }
 
 export type Authenticated = {
-    authenticating: boolean;
+    authenticating: false;
     authenticated?: boolean;
     currentUser?: AuthenticatedUser;
 }
