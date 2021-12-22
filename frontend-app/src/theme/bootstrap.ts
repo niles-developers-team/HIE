@@ -31,6 +31,9 @@ export const bootstrap = () => ({
     py4: {
         paddingTop: `${margin * 4}em !important`
     },
+    mx1: {
+        margin: `0 ${margin * 1}em !important`
+    },
     mx3: {
         margin: `0 ${margin * 3}em !important`
     },

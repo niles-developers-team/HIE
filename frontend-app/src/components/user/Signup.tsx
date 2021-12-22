@@ -10,6 +10,7 @@ import { bootstrap } from "../../theme";
 import { mergeStyles } from "../../utilities/mergeStyles";
 import { Close } from "@mui/icons-material";
 
+import clsx from "clsx";
 const styles = mergeStyles(bootstrap);
 
 interface Props extends WithStyles<typeof styles> { }
@@ -64,7 +65,7 @@ export const Signup = withStyles(styles)(function (props: Props) {
         }
     }, [userState.authenticating, navigate]);
     useEffect(() => {
-        
+
     })
     useEffect(() => {
         setLoading(userState.modelLoading);
@@ -76,7 +77,7 @@ export const Signup = withStyles(styles)(function (props: Props) {
         setLoading(true);
         event.preventDefault();
         dispatch(userActions.saveUser({ login, password, phone: phone, email, followersCount: 0, followsCount: 0 }));
-        
+
         navigate('/sign-in');
     }
 
@@ -86,9 +87,9 @@ export const Signup = withStyles(styles)(function (props: Props) {
         setPassword(event.target && event.target.value);
     }
     return (
-        <Grid className={classes.h100} container direction="column" component="main" alignItems="center" justifyContent="center">
-            <form className={classes.mx1} onSubmit={handleSubmit}>
-                <Card>
+        <form className={clsx(classes.h100, classes.mx1)} onSubmit={handleSubmit}>
+            <Grid className={classes.h100} container direction="row" component="main" alignItems="center" justifyContent="center">
+                <Card className={classes.mx1}>
                     <CardHeader title="Регистрация" />
                     <CardContent>
                         <Grid>
@@ -171,7 +172,7 @@ export const Signup = withStyles(styles)(function (props: Props) {
                         </Grid>
                     </CardContent>
                 </Card>
-                {clientOrBenefactor && <Card className={classes.mt3}>
+                {clientOrBenefactor && <Card className={clsx(classes.mt3, classes.mx1, classes.mb3)}>
                     <CardHeader title="Данные компании"
                         action={
                             <IconButton onClick={() => setClientOrBenefactor(false)} aria-label="settings">
@@ -223,16 +224,16 @@ export const Signup = withStyles(styles)(function (props: Props) {
                         </Grid>
                     </CardContent>
                 </Card>}
-            </form>
-            <Snackbar
-                open={open}
-                onClose={handleSnackbarClose}
-            >
-                <Alert
-                    severity={variant}>
-                    {message}
-                </Alert>
-            </Snackbar>
-        </Grid>
+                <Snackbar
+                    open={open}
+                    onClose={handleSnackbarClose}
+                >
+                    <Alert
+                        severity={variant}>
+                        {message}
+                    </Alert>
+                </Snackbar>
+            </Grid>
+        </form>
     );
 });

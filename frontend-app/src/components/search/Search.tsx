@@ -49,8 +49,8 @@ export const SearchComponent = withStyles(styles)(function (props: Props) {
     }
 
     return (
-        <Container maxWidth="md">
-            <Grid className={clsx(classes.h100, classes.w100)} container direction="column" component="main" alignItems="center" justifyContent="start">
+        <Container className={classes.h100} maxWidth="md">
+            <Grid container direction="column" component="main" alignItems="center" justifyContent="start">
                 <Grid className={classes.mt3} container direction="row" alignItems="center" justifyContent="center">
                     <TextField
                         fullWidth
@@ -61,31 +61,38 @@ export const SearchComponent = withStyles(styles)(function (props: Props) {
                         }}
                         value={search} onChange={(event) => setSearch(event && event.target?.value || '')} />
                 </Grid>
-                <Card className={clsx(classes.w100, classes.mt3)}>
-                    <List>
-                        {!loading && users.map((user, index) => (
-                            <ListItem
-                                key={index}
-                                secondaryAction={
-                                    <Grid>
-                                        <IconButton edge="end" aria-label="delete" onClick={() => { handleOpenChat(user.id || 0); }}>
-                                            <Forum />
-                                        </IconButton>
-                                        <IconButton edge="end" aria-label="delete" onClick={() => { handleFollow(user); }} >
-                                            <GroupAdd />
-                                        </IconButton>
-                                        <Divider></Divider>
-                                    </Grid>
-                                }
-                            >
-                                <ListItemText
-                                    primary={user.login}
-                                    secondary={user.email || ''}
-                                />
-                            </ListItem>
-                        ))}
-                    </List>
-                </Card>
+                {!loading && !users.length && (
+                    <>
+                        <Grid item xs /><Typography className={classes.secondaryColor} variant="h5">Не удалось ничего найти</Typography>
+                    </>
+                )}
+                {!loading && users.length > 0 && (
+                    <Card className={clsx(classes.w100, classes.mt3)}>
+                        <List>
+                            {users.map((user, index) => (
+                                <ListItem
+                                    key={index}
+                                    secondaryAction={
+                                        <Grid>
+                                            <IconButton className={classes.mr2} edge="end" aria-label="delete" onClick={() => { handleOpenChat(user.id || 0); }}>
+                                                <Forum />
+                                            </IconButton>
+                                            <IconButton edge="end" aria-label="delete" onClick={() => { handleFollow(user); }} >
+                                                <GroupAdd />
+                                            </IconButton>
+                                            <Divider></Divider>
+                                        </Grid>
+                                    }
+                                >
+                                    <ListItemText
+                                        primary={user.login}
+                                        secondary={user.email || ''}
+                                    />
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Card>
+                )}
             </Grid>
         </Container>
     );

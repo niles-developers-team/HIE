@@ -1,4 +1,4 @@
-import { Alert, Button, Card, CardContent, CircularProgress, Grid, Link, Snackbar, TextField } from "@mui/material";
+import { Alert, Button, Card, CardContent, CardHeader, CircularProgress, Grid, Link, Snackbar, TextField } from "@mui/material";
 import { WithStyles, withStyles } from "@mui/styles";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -72,6 +72,7 @@ export const Signin = withStyles(styles)(function (props: Props) {
     return (
         <Grid className={classes.h100} container direction="column" component="main" alignItems="center" justifyContent="center">
             <Card>
+                <CardHeader title="Авторизация"/>
                 <CardContent>
                     <form className={classes.mx1} onSubmit={handleSubmit}>
                         <TextField

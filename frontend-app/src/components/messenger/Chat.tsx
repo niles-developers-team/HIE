@@ -78,11 +78,12 @@ export const ChatComponent = withStyles(styles)(function (props: Props) {
                         <Grid item xs /><Typography className={classes.secondaryColor} variant="h5">Похоже сообщений еще нет</Typography>
                     </>
                 )}
-                <Card className={clsx(classes.w100, classes.mt3)}>
+                {messages.length > 0 && (<Card className={clsx(classes.w100, classes.mt3)}>
                     <List>
                         {messagesComponents}
                     </List>
                 </Card>
+                )}
                 <Grid item xs />
                 <Paper className={clsx(classes.w100, classes.p1)}>
                     <Grid className={classes.px1} container direction="row" alignItems="center">

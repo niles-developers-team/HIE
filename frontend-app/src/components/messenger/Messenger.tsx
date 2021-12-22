@@ -14,7 +14,7 @@ import { mergeStyles } from "../../utilities/mergeStyles";
 const styles = mergeStyles(bootstrap, colors);
 interface Props extends WithStyles<typeof styles> { }
 
-export const Messenger = withStyles(styles)(function(props: Props) {
+export const Messenger = withStyles(styles)(function (props: Props) {
     const { classes } = props;
     const [chats, setChats] = useState<Chat[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -43,28 +43,34 @@ export const Messenger = withStyles(styles)(function(props: Props) {
     }
 
     return (
-        <Container maxWidth="md">
-            <Grid className="h100" container direction="column" component="main" alignItems="center" justifyContent="center">
+        <Container className={classes.h100} maxWidth="md">
+            <Grid className={classes.h100} container direction="column" component="main" alignItems="center" justifyContent="start">
                 {loading && <CircularProgress size={128} />}
-                <Card className={clsx(classes.w100, classes.mt3)}>
-                <List>
-                    {chats.map((chat, index) => {
-                        return (<ListItem
-                            secondaryAction={
-                                <Grid>
-                                    <IconButton edge="end" aria-label="delete" onClick={() => { handleOpenChat(chat.recepientId); }}>
-                                        <Forum />
-                                    </IconButton>
-                                </Grid>
-                            }>
-                            <ListItemText
-                                primary={chat.recepientLogin}
-                                secondary={chat.lastMessage?.text || ''}
-                            />
-                        </ListItem>);
-                    })}
-                </List>
+                {!chats.length &&
+                    <>
+                        <Grid item xs /><Typography className={classes.secondaryColor} variant="h5">Похоже сообщений еще нет</Typography><Grid item xs />
+                    </>
+                }
+                {chats.length > 0 && (<Card className={clsx(classes.w100, classes.mt3)}>
+                    <List>
+                        {chats.map((chat, index) => {
+                            return (<ListItem
+                                secondaryAction={
+                                    <Grid>
+                                        <IconButton edge="end" aria-label="delete" onClick={() => { handleOpenChat(chat.recepientId); }}>
+                                            <Forum />
+                                        </IconButton>
+                                    </Grid>
+                                }>
+                                <ListItemText
+                                    primary={chat.recepientLogin}
+                                    secondary={chat.lastMessage?.text || ''}
+                                />
+                            </ListItem>);
+                        })}
+                    </List>
                 </Card>
+                )}
             </Grid>
         </Container >
     );

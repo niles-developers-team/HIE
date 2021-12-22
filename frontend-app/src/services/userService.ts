@@ -75,7 +75,7 @@ class UserService {
             if (options.ids)
                 url += `${conditionIndex++ === 0 ? '?' : '&'}ids=${options.ids}`;
             if (options.search !== undefined)
-                url += `${conditionIndex++ === 0 ? '?' : '&'}search=${options.search}`;
+                url += `${conditionIndex++ === 0 ? '?' : '&'}searchText=${options.search}`;
         }
 
         return fetch(url, {
